@@ -42,7 +42,7 @@ export default function OnboardingClient({ profile, userEmail }) {
       <div className="space-y-3">
         <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
           <span className="h-2 w-2 rounded-full bg-emerald-400" />
-          College Domain Verified ({profile?.verification_method || "college_email"})
+          Email Account Verified ({profile?.verification_method || "email_verified"})
         </div>
 
         <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">

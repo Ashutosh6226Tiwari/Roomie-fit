@@ -13,16 +13,11 @@ export async function GET(request) {
   }
 
   const domain = email.split("@")[1]?.toLowerCase().trim();
-  const allowedDomainsEnv = process.env.ALLOWED_COLLEGE_EMAIL_DOMAINS || "college.edu";
-  const allowedDomains = allowedDomainsEnv
-    .split(",")
-    .map((d) => d.trim().toLowerCase());
-
-  const isCollegeDomain = allowedDomains.includes(domain);
+  const isCollegeDomain = true; // Allow login/signup with any email ID per user request
 
   return NextResponse.json({
     isCollegeDomain,
     domain,
-    allowedDomains,
+    allowedDomains: ["*"],
   });
 }

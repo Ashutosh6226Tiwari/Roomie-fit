@@ -236,12 +236,12 @@ export default function SignUpPage() {
           {/* Email Address */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              College Email Address
+              Email Address (Any Email Allowed)
             </label>
             <input
               type="email"
               required
-              placeholder="e.g. alex@college.edu"
+              placeholder="e.g. alex@gmail.com or alex@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
@@ -254,8 +254,8 @@ export default function SignUpPage() {
                   <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
                     <span className="h-2 w-2 rounded-full bg-emerald-400" />
                     <span>
-                      College domain verified (
-                      <strong>@{activeDomainStatus.domain}</strong>). Automatic
+                      Email verified (
+                      <strong>@{activeDomainStatus.domain}</strong>). Instant
                       verification enabled!
                     </span>
                   </div>

@@ -148,7 +148,7 @@ export default function MatchCard({ match, requesterProfile, rank }) {
     .toUpperCase();
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-700/60 bg-gradient-to-b from-slate-900/90 to-slate-950 p-6 shadow-2xl transition-all duration-300 hover:border-indigo-500/40 hover:shadow-indigo-500/10">
+    <div className="card-3d group relative flex flex-col overflow-hidden rounded-3xl p-6 transition-all duration-400">
       {/* Top Rank Ribbon if Rank 1 */}
       {rank === 1 && (
         <div className="absolute -right-12 top-6 rotate-45 bg-gradient-to-r from-amber-500 to-amber-600 px-12 py-1 text-center text-xs font-black uppercase tracking-widest text-slate-950 shadow-lg">

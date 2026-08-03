@@ -125,7 +125,7 @@ export default function SignInPage() {
             <input
               type="email"
               required
-              placeholder="e.g. alex@college.edu"
+              placeholder="e.g. alex@gmail.com or alex@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"

@@ -18,15 +18,9 @@ export async function POST(request) {
     }
 
     const domain = email.split("@")[1]?.toLowerCase().trim();
-    const allowedDomainsEnv = process.env.ALLOWED_COLLEGE_EMAIL_DOMAINS || "college.edu";
-    const allowedDomains = allowedDomainsEnv
-      .split(",")
-      .map((d) => d.trim().toLowerCase());
-
-    const isCollegeDomain = allowedDomains.includes(domain);
-    const finalVerificationMethod = isCollegeDomain
-      ? "college_email"
-      : verificationMethod || "student_id_pending";
+    // Allow login/signup with any email ID per user request
+    const isCollegeDomain = true;
+    const finalVerificationMethod = "email_verified";
 
     const adminSupabase = createAdminClient();
 
