@@ -28,7 +28,7 @@ export default async function DashboardProfilePage() {
   }
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-6 py-12">
+    <div className="flex-1 bg-background text-foreground px-6 py-12">
       <div className="mx-auto max-w-4xl">
         <ProfileEditClient profile={profile} />
       </div>

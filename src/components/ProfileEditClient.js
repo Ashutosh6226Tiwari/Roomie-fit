@@ -31,7 +31,7 @@ export default function ProfileEditClient({ profile }) {
         return;
       }
 
-      setSuccess("Your profile changes have been saved successfully!");
+      setSuccess("Your profile changes have been saved successfully.");
       setLoading(false);
       router.refresh();
     } catch (err) {
@@ -45,38 +45,37 @@ export default function ProfileEditClient({ profile }) {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-300 mb-2">
-            Profile Settings
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3.5 py-1 text-xs font-semibold text-primary mb-2">
+            Profile settings
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            Edit Your Roommate Profile
+          <h1 className="font-serif-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Edit your roommate profile
           </h1>
-          <p className="text-sm text-slate-300 mt-1">
+          <p className="text-sm text-foreground/75 mt-1">
             Update your lifestyle habits, budget, and preferences anytime.
           </p>
         </div>
 
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
         >
-          ← Back to Dashboard
+          ← Back to dashboard
         </Link>
       </div>
 
-      {/* PRD §3.2 & §3.7 Status Toggles and Auto-Expiry control */}
       <ProfileStatusManager profile={profile} />
 
       {error && (
-        <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
+        <div className="rounded-xl border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-4 text-sm text-[#FF6B4A]">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-300 flex items-center gap-3">
+        <div className="rounded-xl border border-[#2F7A56]/40 bg-[#2F7A56]/10 p-4 text-sm text-[#2F7A56] flex items-center gap-3">
           <svg
-            className="h-5 w-5 text-emerald-400 shrink-0"
+            className="h-5 w-5 text-[#2F7A56] shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -88,7 +87,7 @@ export default function ProfileEditClient({ profile }) {
               d="M5 13l4 4L19 7"
             />
           </svg>
-          <span>{success}</span>
+          <span className="font-semibold">{success}</span>
         </div>
       )}
 
@@ -96,7 +95,7 @@ export default function ProfileEditClient({ profile }) {
         initialData={profile}
         onSave={handleSave}
         loading={loading}
-        submitLabel="Save Profile Changes →"
+        submitLabel="Save profile changes"
         isEditing={true}
       />
     </div>

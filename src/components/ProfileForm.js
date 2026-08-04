@@ -19,7 +19,7 @@ export default function ProfileForm({
   initialData = null,
   onSave,
   loading = false,
-  submitLabel = "Save Profile →",
+  submitLabel = "Save profile",
   isEditing = false,
 }) {
   const supabase = createClient();
@@ -73,7 +73,7 @@ export default function ProfileForm({
     }
   }, [initialData]);
 
-  // Live Character Count for about_me (300 - 500 chars limit per §3.2)
+  // Live Character Count for about_me
   const aboutCharCount = aboutMe.length;
   const isAboutUnderMin = aboutCharCount > 0 && aboutCharCount < 300;
   const isAboutOverMax = aboutCharCount > 500;
@@ -99,25 +99,40 @@ export default function ProfileForm({
         return;
       }
 
-      const fileExt = file.name.split(".").pop() || "jpg";
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("profile-photos")
-        .upload(fileName, file, { upsert: true });
-
-      if (uploadError) {
-        throw uploadError;
+      // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
+        setPhotoError("Photo size must be under 5MB.");
+        setUploadingPhoto(false);
+        return;
       }
 
-      const { data: publicUrlData } = supabase.storage
-        .from("profile-photos")
-        .getPublicUrl(fileName);
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
 
-      setPhotoUrl(publicUrlData.publicUrl);
+      const { error: uploadErr } = await supabase.storage
+        .from("profile-photos")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      if (uploadErr) {
+        setPhotoError(
+          "Storage bucket 'profile-photos' error: " + uploadErr.message
+        );
+        setUploadingPhoto(false);
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("profile-photos").getPublicUrl(filePath);
+
+      setPhotoUrl(publicUrl);
     } catch (err) {
-      console.error("Photo upload error:", err);
-      setPhotoError("Failed to upload photo. Please try again.");
+      console.error("Photo Upload error:", err);
+      setPhotoError("An unexpected error occurred while uploading your photo.");
     } finally {
       setUploadingPhoto(false);
     }
@@ -127,30 +142,26 @@ export default function ProfileForm({
     e.preventDefault();
     setFormError("");
 
-    if (!fullName.trim()) {
-      setFormError("Full name is required.");
+    if (!fullName || !city || !moveInMonth) {
+      setFormError("Please complete all required fields.");
       return;
     }
-    if (Number(budgetMax) < Number(budgetMin)) {
-      setFormError("Maximum budget must be at least the minimum budget.");
+
+    if (Number(budgetMin) > Number(budgetMax)) {
+      setFormError("Minimum budget cannot be higher than maximum budget.");
       return;
     }
-    if (aboutCharCount > 0 && aboutCharCount < 300) {
-      setFormError(
-        `'About me' is ${aboutCharCount} characters. Please provide at least 300 characters so the AI matching engine can accurately parse your lifestyle nuances.`
-      );
-      return;
-    }
+
     if (aboutCharCount > 500) {
       setFormError(
-        `'About me' exceeds the 500-character limit (${aboutCharCount}/500). Please shorten it.`
+        "About Me description must be 500 characters or fewer."
       );
       return;
     }
 
     const payload = {
       full_name: fullName.trim(),
-      city: city.trim(),
+      city,
       budget_min: Number(budgetMin),
       budget_max: Number(budgetMax),
       gender,
@@ -159,10 +170,10 @@ export default function ProfileForm({
       cleanliness_level: Number(cleanliness),
       food_habits: foodHabits,
       guest_frequency: guestFrequency,
-      smoking: Boolean(smoking),
-      move_in_month: moveInMonth,
-      about_me: aboutMe.trim() || null,
-      actively_looking: Boolean(activelyLooking),
+      smoking,
+      move_in_month: new Date(moveInMonth).toISOString(),
+      about_me: aboutMe.trim(),
+      actively_looking: activelyLooking,
       photo_url: photoUrl,
     };
 
@@ -170,47 +181,44 @@ export default function ProfileForm({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-8 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 shadow-2xl backdrop-blur-xl"
-    >
+    <form onSubmit={handleSubmit} className="space-y-10">
       {formError && (
-        <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
+        <div className="rounded-xl border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-4 text-sm text-[#FF6B4A]">
           {formError}
         </div>
       )}
 
       {/* SECTION 1: Personal Profile & Photo */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="flex items-center justify-between border-b border-border pb-4">
           <div>
-            <h2 className="text-lg font-bold text-white">
-              1. Basic Information
+            <h2 className="font-serif-display text-lg font-bold text-foreground">
+              1. Basic information
             </h2>
-            <p className="text-xs text-slate-400">
-              Your identity and where you are looking to live.
+            <p className="text-xs text-foreground/70">
+              Your identity and target campus city.
             </p>
           </div>
-          <span className="rounded-full bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 text-xs font-semibold text-indigo-300">
-            Structured Filters
+          <span className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold text-primary">
+            Structured filters
           </span>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {/* Photo Upload Box */}
           <div className="sm:col-span-1 flex flex-col items-center justify-center space-y-3">
-            <div className="relative h-28 w-28 overflow-hidden rounded-2xl border-2 border-dashed border-white/20 bg-slate-900/60 flex items-center justify-center group hover:border-indigo-500/50 transition-all">
+            <div className="relative h-28 w-28 overflow-hidden rounded-2xl border-2 border-dashed border-border bg-secondary flex items-center justify-center group hover:border-primary/50 transition-all">
               {photoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={photoUrl}
-                  alt="Profile Preview"
+                  alt="Profile preview"
                   className="h-full w-full object-cover"
                 />
               ) : (
                 <div className="flex flex-col items-center text-center p-2">
                   <svg
-                    className="h-8 w-8 text-slate-500 group-hover:text-indigo-400 transition-colors"
+                    className="h-8 w-8 text-foreground/50 group-hover:text-primary transition-colors"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -228,8 +236,8 @@ export default function ProfileForm({
                       d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span className="text-[11px] text-slate-400 mt-1 font-medium">
-                    {uploadingPhoto ? "Uploading..." : "Add Photo"}
+                  <span className="text-[11px] text-foreground/60 mt-1 font-medium">
+                    {uploadingPhoto ? "Uploading..." : "Add photo"}
                   </span>
                 </div>
               )}
@@ -242,18 +250,18 @@ export default function ProfileForm({
               />
             </div>
             {photoError && (
-              <span className="text-xs text-red-400">{photoError}</span>
+              <span className="text-xs text-[#FF6B4A]">{photoError}</span>
             )}
-            <span className="text-[11px] text-slate-500">
-              Optional profile picture (5MB max)
+            <span className="text-[11px] text-foreground/60">
+              Optional photo (5MB max)
             </span>
           </div>
 
           {/* Name, City & Looking Toggle */}
           <div className="sm:col-span-2 space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                Full Name *
+              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+                Full name *
               </label>
               <input
                 type="text"
@@ -261,22 +269,22 @@ export default function ProfileForm({
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Alex Rivera"
-                className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
               />
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                  Target City *
+                <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+                  Target city *
                 </label>
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-slate-900/80 px-4 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+                  className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
                 >
                   {DEFAULT_CITIES.map((c) => (
-                    <option key={c} value={c} className="bg-slate-900 text-white">
+                    <option key={c} value={c} className="bg-card text-foreground">
                       {c}
                     </option>
                   ))}
@@ -284,35 +292,34 @@ export default function ProfileForm({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                  Move-in Timeframe *
+                <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+                  Move-in timeframe *
                 </label>
                 <input
                   type="date"
                   required
                   value={moveInMonth}
                   onChange={(e) => setMoveInMonth(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+                  className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
                 />
               </div>
             </div>
 
             {/* Actively Looking Toggle */}
-            <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <div className="flex items-center justify-between rounded-xl border border-border bg-secondary p-3.5">
               <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-white">
-                  Actively Looking for Roommates
+                <span className="text-xs font-semibold text-foreground">
+                  Actively looking for roommates
                 </span>
-                <p className="text-[11px] text-slate-400">
-                  When enabled, your profile appears in top-3 AI matches for
-                  other verified students.
+                <p className="text-[11px] text-foreground/70">
+                  When enabled, your profile appears in matches for other students.
                 </p>
               </div>
               <input
                 type="checkbox"
                 checked={activelyLooking}
                 onChange={(e) => setActivelyLooking(e.target.checked)}
-                className="h-5 w-5 rounded border-white/20 bg-slate-900 text-indigo-500 focus:ring-indigo-500"
+                className="h-5 w-5 rounded border-border bg-card text-primary focus:ring-primary"
               />
             </div>
           </div>
@@ -321,29 +328,29 @@ export default function ProfileForm({
 
       {/* SECTION 2: Hard Filters (Budget & Genders) */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="flex items-center justify-between border-b border-border pb-4">
           <div>
-            <h2 className="text-lg font-bold text-white">
-              2. Roommate &amp; Budget Requirements
+            <h2 className="font-serif-display text-lg font-bold text-foreground">
+              2. Budget &amp; preferences
             </h2>
-            <p className="text-xs text-slate-400">
-              Used as strict exclusion filters in Step 1 of AI Matching.
+            <p className="text-xs text-foreground/70">
+              Used as strict exclusion filters in roommate matching.
             </p>
           </div>
-          <span className="rounded-full bg-purple-500/10 border border-purple-500/30 px-3 py-1 text-xs font-semibold text-purple-300">
-            Hard Filters
+          <span className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold text-primary">
+            Exclusion filters
           </span>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {/* Monthly Budget Range */}
-          <div className="space-y-3 rounded-2xl border border-white/10 bg-slate-900/40 p-5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Monthly Budget Range ($/month) *
+          <div className="card-clean space-y-3 rounded-2xl p-5 bg-card">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+              Monthly budget range ($/month) *
             </label>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <span className="text-[11px] text-slate-400">Min Budget ($)</span>
+                <span className="text-[11px] text-foreground/70">Min budget ($)</span>
                 <input
                   type="number"
                   min="0"
@@ -351,11 +358,11 @@ export default function ProfileForm({
                   required
                   value={budgetMin}
                   onChange={(e) => setBudgetMin(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-card px-4 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
                 />
               </div>
               <div>
-                <span className="text-[11px] text-slate-400">Max Budget ($)</span>
+                <span className="text-[11px] text-foreground/70">Max budget ($)</span>
                 <input
                   type="number"
                   min={budgetMin}
@@ -363,94 +370,93 @@ export default function ProfileForm({
                   required
                   value={budgetMax}
                   onChange={(e) => setBudgetMax(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-card px-4 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
                 />
               </div>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-foreground/60">
               Roommate budgets must overlap for compatibility.
             </p>
           </div>
 
           {/* Gender & Preference */}
-          <div className="space-y-3 rounded-2xl border border-white/10 bg-slate-900/40 p-5">
+          <div className="card-clean space-y-3 rounded-2xl p-5 bg-card">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-300">
-                  Your Gender *
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-foreground/80">
+                  Your gender *
                 </label>
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm text-white focus:border-indigo-500"
+                  className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary"
                 >
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Non-binary / Other</option>
+                  <option value="male" className="bg-card text-foreground">Male</option>
+                  <option value="female" className="bg-card text-foreground">Female</option>
+                  <option value="other" className="bg-card text-foreground">Non-binary / Other</option>
                 </select>
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-300">
-                  Preferred Roommate *
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-foreground/80">
+                  Preferred roommate *
                 </label>
                 <select
                   value={prefGender}
                   onChange={(e) => setPrefGender(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm text-white focus:border-indigo-500"
+                  className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary"
                 >
-                  <option value="any">Any Gender</option>
-                  <option value="male">Male Only</option>
-                  <option value="female">Female Only</option>
+                  <option value="any" className="bg-card text-foreground">Any gender</option>
+                  <option value="male" className="bg-card text-foreground">Male only</option>
+                  <option value="female" className="bg-card text-foreground">Female only</option>
                 </select>
               </div>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-foreground/60">
               Applied strictly against potential roommates&apos; gender field.
             </p>
           </div>
         </div>
       </div>
 
-      {/* SECTION 3: Lifestyle & Habits (Rule-based scoring) */}
+      {/* SECTION 3: Lifestyle & Habits */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="flex items-center justify-between border-b border-border pb-4">
           <div>
-            <h2 className="text-lg font-bold text-white">
-              3. Lifestyle &amp; Living Habits
+            <h2 className="font-serif-display text-lg font-bold text-foreground">
+              3. Lifestyle &amp; living habits
             </h2>
-            <p className="text-xs text-slate-400">
-              Used in Step 2 rule-based scoring (sleep, cleanliness, food,
-              guests, smoking).
+            <p className="text-xs text-foreground/70">
+              Used in compatibility scoring (sleep, cleanliness, food, guests, smoking).
             </p>
           </div>
-          <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 text-xs font-semibold text-emerald-300">
-            Rule-Based Scoring
+          <span className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold text-primary">
+            Lifestyle scoring
           </span>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Sleep Schedule (20% weight) */}
-          <div className="space-y-2 rounded-2xl border border-white/10 bg-slate-900/40 p-4">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Sleep Schedule *
+          {/* Sleep Schedule */}
+          <div className="card-clean space-y-2 rounded-2xl p-4 bg-card">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+              Sleep schedule *
             </label>
             <select
               value={sleepSchedule}
               onChange={(e) => setSleepSchedule(e.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm text-white focus:border-indigo-500"
+              className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary"
             >
-              <option value="early_bird">Early Bird (Before 11 PM)</option>
-              <option value="night_owl">Night Owl (After 12 AM)</option>
-              <option value="flexible">Flexible / Varied</option>
+              <option value="early_bird" className="bg-card text-foreground">Early bird (Before 11 PM)</option>
+              <option value="night_owl" className="bg-card text-foreground">Night owl (After 12 AM)</option>
+              <option value="flexible" className="bg-card text-foreground">Flexible / varied</option>
             </select>
           </div>
 
-          {/* Cleanliness Level (25% weight) */}
-          <div className="space-y-2 rounded-2xl border border-white/10 bg-slate-900/40 p-4">
-            <div className="flex justify-between text-xs font-semibold uppercase tracking-wider text-slate-300">
-              <span>Cleanliness Level *</span>
-              <span className="text-indigo-400 font-bold">
+          {/* Cleanliness Level */}
+          <div className="card-clean space-y-2 rounded-2xl p-4 bg-card">
+            <div className="flex justify-between text-xs font-semibold uppercase tracking-wider text-foreground/80">
+              <span>Cleanliness level *</span>
+              <span className="font-mono-data text-primary font-bold">
                 {cleanliness} / 5
               </span>
             </div>
@@ -461,89 +467,86 @@ export default function ProfileForm({
               step="1"
               value={cleanliness}
               onChange={(e) => setCleanliness(Number(e.target.value))}
-              className="w-full accent-indigo-500 cursor-pointer"
+              className="w-full accent-primary cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-slate-400">
-              <span>1 - Very Casual</span>
+            <div className="flex justify-between text-[10px] text-foreground/60">
+              <span>1 - Casual</span>
               <span>3 - Neat</span>
               <span>5 - Immaculate</span>
             </div>
           </div>
 
-          {/* Food Habits (15% weight) */}
-          <div className="space-y-2 rounded-2xl border border-white/10 bg-slate-900/40 p-4">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Food Habits *
+          {/* Food Habits */}
+          <div className="card-clean space-y-2 rounded-2xl p-4 bg-card">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+              Food habits *
             </label>
             <select
               value={foodHabits}
               onChange={(e) => setFoodHabits(e.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm text-white focus:border-indigo-500"
+              className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary"
             >
-              <option value="no_preference">No Preference / Omnivore</option>
-              <option value="vegetarian">Vegetarian</option>
-              <option value="vegan">Vegan</option>
-              <option value="non_vegetarian">Non-Vegetarian Only</option>
+              <option value="no_preference" className="bg-card text-foreground">No preference</option>
+              <option value="vegetarian" className="bg-card text-foreground">Vegetarian</option>
+              <option value="vegan" className="bg-card text-foreground">Vegan</option>
+              <option value="non_vegetarian" className="bg-card text-foreground">Non-vegetarian</option>
             </select>
           </div>
 
-          {/* Guest Frequency (15% weight) */}
-          <div className="space-y-2 rounded-2xl border border-white/10 bg-slate-900/40 p-4">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Guest Frequency *
+          {/* Guest Frequency */}
+          <div className="card-clean space-y-2 rounded-2xl p-4 bg-card">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+              Guest frequency *
             </label>
             <select
               value={guestFrequency}
               onChange={(e) => setGuestFrequency(e.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-slate-900 px-3 py-2 text-sm text-white focus:border-indigo-500"
+              className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary"
             >
-              <option value="rarely">Rarely (Few guests)</option>
-              <option value="occasionally">Occasionally (Weekends)</option>
-              <option value="frequently">Frequently (Open door)</option>
+              <option value="rarely" className="bg-card text-foreground">Rarely (Few guests)</option>
+              <option value="occasionally" className="bg-card text-foreground">Occasionally (Weekends)</option>
+              <option value="frequently" className="bg-card text-foreground">Frequently (Open door)</option>
             </select>
           </div>
 
-          {/* Smoking Toggle (15% weight) */}
-          <div className="space-y-2 rounded-2xl border border-white/10 bg-slate-900/40 p-4 flex flex-col justify-between">
+          {/* Smoking Toggle */}
+          <div className="card-clean space-y-2 rounded-2xl p-4 bg-card flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                Do You Smoke? *
+              <label className="block text-xs font-semibold uppercase tracking-wider text-foreground/80">
+                Do you smoke? *
               </label>
               <input
                 type="checkbox"
                 checked={smoking}
                 onChange={(e) => setSmoking(e.target.checked)}
-                className="h-5 w-5 rounded border-white/20 bg-slate-900 text-indigo-500 focus:ring-indigo-500"
+                className="h-5 w-5 rounded border-border bg-card text-primary focus:ring-primary"
               />
             </div>
-            <p className="text-[11px] text-slate-400">
-              {smoking
-                ? "Yes (Smoker)"
-                : "No (Non-smoker)"}
+            <p className="text-[11px] text-foreground/70">
+              {smoking ? "Yes (Smoker)" : "No (Non-smoker)"}
             </p>
           </div>
         </div>
       </div>
 
-      {/* SECTION 4: About Me (300 - 500 Char limit per §3.2) */}
+      {/* SECTION 4: About Me */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="flex items-center justify-between border-b border-border pb-4">
           <div>
-            <h2 className="text-lg font-bold text-white">
-              4. About Me (AI Nuance Signal)
+            <h2 className="font-serif-display text-lg font-bold text-foreground">
+              4. About me
             </h2>
-            <p className="text-xs text-slate-400">
-              Read by Claude AI in Step 3 to discover shared lifestyle vibes &amp;
-              red flags.
+            <p className="text-xs text-foreground/70">
+              Helps peers discover shared lifestyle vibes &amp; routine nuances.
             </p>
           </div>
           <span
             className={`rounded-full px-3 py-1 text-xs font-semibold border ${
               isAboutValid
-                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+                ? "bg-[#2F7A56]/10 border-[#2F7A56]/30 text-[#2F7A56]"
                 : isAboutOverMax
-                ? "bg-red-500/10 border-red-500/30 text-red-300"
-                : "bg-amber-500/10 border-amber-500/30 text-amber-300"
+                ? "bg-[#FF6B4A]/10 border-[#FF6B4A]/30 text-[#FF6B4A]"
+                : "bg-secondary border-border text-foreground/70"
             }`}
           >
             {aboutCharCount} / 500 characters
@@ -556,31 +559,31 @@ export default function ProfileForm({
             maxLength={500}
             value={aboutMe}
             onChange={(e) => setAboutMe(e.target.value)}
-            placeholder="Tell future roommates about your typical week, study schedule, hobbies, or what makes a great living environment for you... (min. 300 characters recommended)"
-            className={`w-full rounded-2xl border bg-slate-900/60 p-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 transition-all ${
+            placeholder="Tell future roommates about your typical week, study schedule, hobbies, or what makes a great living environment for you... (300 characters recommended)"
+            className={`w-full rounded-2xl border bg-card p-4 text-sm text-foreground placeholder-foreground/40 focus:outline-none focus:ring-1 transition-all ${
               isAboutUnderMin
-                ? "border-amber-500/40 focus:border-amber-500 focus:ring-amber-500"
+                ? "border-border focus:border-primary focus:ring-primary"
                 : isAboutOverMax
-                ? "border-red-500/50 focus:border-red-500 focus:ring-red-500"
-                : "border-white/15 focus:border-indigo-500 focus:ring-indigo-500"
+                ? "border-[#FF6B4A]/50 focus:border-[#FF6B4A] focus:ring-[#FF6B4A]"
+                : "border-border focus:border-primary focus:ring-primary"
             }`}
           />
           <div className="flex items-center justify-between text-xs">
             <span
               className={
                 isAboutUnderMin
-                  ? "text-amber-300"
+                  ? "text-foreground/70"
                   : isAboutOverMax
-                  ? "text-red-400 font-bold"
-                  : "text-slate-400"
+                  ? "text-[#FF6B4A] font-bold"
+                  : "text-foreground/70"
               }
             >
               {isAboutUnderMin &&
-                `Add ${300 - aboutCharCount} more characters for optimal AI compatibility matching (300-500 limit).`}
+                `Add ${300 - aboutCharCount} more characters for optimal compatibility matching (300-500 recommended).`}
               {isAboutValid &&
-                "Great length! The AI engine will parse this for nuance and lifestyle compatibility."}
+                "Great length! Your future roommates will get a clear picture of your routine."}
             </span>
-            <span className="text-slate-500">{aboutCharCount} / 500</span>
+            <span className="font-mono-data text-foreground/60">{aboutCharCount} / 500</span>
           </div>
         </div>
       </div>
@@ -590,9 +593,9 @@ export default function ProfileForm({
         <button
           type="submit"
           disabled={loading || uploadingPhoto}
-          className="w-full rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-600 px-8 py-4 text-base font-bold text-white shadow-xl shadow-indigo-500/25 transition-all hover:from-indigo-600 hover:to-purple-700 hover:shadow-indigo-500/40 disabled:opacity-50"
+          className="btn-primary-flat w-full rounded-2xl px-8 py-4 text-base font-bold shadow-sm transition-all hover:scale-[1.01] disabled:opacity-50"
         >
-          {loading ? "Saving Profile..." : submitLabel}
+          {loading ? "Saving profile..." : submitLabel}
         </button>
       </div>
     </form>

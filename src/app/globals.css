@@ -3,6 +3,27 @@
 :root {
   --background: #FFFFFF;
   --foreground: #17151F;
+
+  /* Shared shadcn / semantic UI theme variables per V3.0 design system */
+  --card: #FFFFFF;
+  --card-foreground: #17151F;
+  --popover: #FFFFFF;
+  --popover-foreground: #17151F;
+  --primary: #5B4EE5;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1EFFC;
+  --secondary-foreground: #17151F;
+  --muted: #F1EFFC;
+  --muted-foreground: #5E5A75;
+  --accent: #F1EFFC;
+  --accent-foreground: #17151F;
+  --destructive: #FF6B4A;
+  --destructive-foreground: #FFFFFF;
+  --border: #E4E1F2;
+  --input: #E4E1F2;
+  --ring: #5B4EE5;
+  --radius: 0.75rem;
+
   --color-secondary-bg: #F1EFFC;
   --color-primary-accent: #5B4EE5;
   --color-secondary-accent: #FF6B4A;
@@ -12,6 +33,24 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-fraunces), Georgia, serif;
   --font-mono: var(--font-ibm-plex-mono), monospace;
@@ -24,7 +63,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #FFFFFF;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -54,8 +93,9 @@ body {
 
 /* Flat, clean card styles per v3.0 design system */
 .card-clean {
-  background: #FFFFFF;
-  border: 1px solid #E4E1F2;
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
   box-shadow: 0 4px 16px rgba(23, 21, 31, 0.04);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -68,13 +108,13 @@ body {
 
 /* Flat secondary background section */
 .bg-lilac-section {
-  background-color: #F1EFFC;
+  background-color: var(--secondary);
 }
 
 /* Primary flat button per design spec */
 .btn-primary-flat {
-  background-color: #5B4EE5;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
@@ -84,7 +124,7 @@ body {
 
 /* Secondary score highlight card */
 .score-badge-coral {
-  color: #FF6B4A;
+  color: var(--color-secondary-accent);
   font-family: var(--font-mono);
 }
 

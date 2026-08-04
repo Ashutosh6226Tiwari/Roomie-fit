@@ -40,23 +40,23 @@ export default function OnboardingClient({ profile, userEmail }) {
   return (
     <div className="space-y-8">
       <div className="space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
-          <span className="h-2 w-2 rounded-full bg-emerald-400" />
-          College Domain Verified ({profile?.verification_method || "college_email"})
+        <div className="inline-flex items-center gap-2 rounded-full badge-trust px-3 py-1 text-xs font-semibold">
+          <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
+          <span>Verified student community</span>
         </div>
 
-        <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-          Set Up Your Roommate Profile
+        <h1 className="font-serif-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          Set up your roommate profile
         </h1>
 
-        <p className="text-base text-slate-300 max-w-2xl">
-          Tell us about your budget, sleep habits, cleanliness, and preferences so our
-          AI engine can match you with compatible roommates.
+        <p className="text-sm text-foreground/80 max-w-2xl leading-relaxed">
+          Tell us about your budget, sleep schedule, cleanliness, and daily routine so we
+          can score your lifestyle compatibility with peers in your city.
         </p>
       </div>
 
       {error && (
-        <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
+        <div className="rounded-xl border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-4 text-sm text-[#FF6B4A]">
           {error}
         </div>
       )}
@@ -65,7 +65,7 @@ export default function OnboardingClient({ profile, userEmail }) {
         initialData={profile}
         onSave={handleSave}
         loading={loading}
-        submitLabel="Complete Onboarding & View Matches →"
+        submitLabel="Complete profile & view matches"
         isEditing={false}
       />
     </div>
