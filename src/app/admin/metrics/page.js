@@ -44,7 +44,7 @@ export default function AdminMetricsPage() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-indigo-300">
               <span className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
-              <span>Internal Only • PRD §8 &amp; §3.7</span>
+              <span>Internal Admin Analytics</span>
             </div>
             <h1 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
               RoomieMatch Internal Metrics
@@ -72,8 +72,7 @@ export default function AdminMetricsPage() {
                 Admin Secret Authentication
               </h2>
               <p className="text-xs text-slate-400">
-                Enter the internal admin secret to query production analytics per
-                PRD §8.
+                Enter the internal admin secret to query production analytics.
               </p>
             </div>
 

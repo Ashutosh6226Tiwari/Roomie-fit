@@ -72,7 +72,7 @@ export default function FindRoommatesSection({ profile }) {
           Complete Your Profile to Unlock Matching
         </h2>
         <p className="mx-auto max-w-lg text-sm text-slate-300">
-          To calculate your lifestyle compatibility and budget overlap per §3.3,
+          To calculate your lifestyle compatibility and budget overlap,
           please finish setting up your city, budget range, and daily habits.
         </p>
         <div className="pt-2">

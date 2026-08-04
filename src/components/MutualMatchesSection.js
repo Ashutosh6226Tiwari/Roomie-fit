@@ -50,7 +50,7 @@ export default function MutualMatchesSection() {
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
             <span className="h-2 w-2 rounded-full bg-amber-400" />
-            <span>PRD §3.6 Contact Reveal</span>
+            <span>Unlocked Contact Information</span>
           </div>
           <h2 className="mt-2 text-2xl font-extrabold text-white flex items-center gap-2">
             <span>🤝 My Mutual Roommate Matches</span>
@@ -106,8 +106,8 @@ export default function MutualMatchesSection() {
           <p className="mx-auto max-w-md text-sm text-slate-400">
             When you and another student both click{" "}
             <strong className="text-slate-300">&ldquo;👋 I&apos;m Interested!&rdquo;</strong>{" "}
-            on each other&apos;s candidate cards, your verified college contact
-            information will unlock here per PRD §3.6!
+            on each other&apos;s candidate cards, your verified contact
+            information will unlock here automatically!
           </p>
         </div>
       )}

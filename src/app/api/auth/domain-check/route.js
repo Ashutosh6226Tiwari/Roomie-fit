@@ -13,11 +13,14 @@ export async function GET(request) {
   }
 
   const domain = email.split("@")[1]?.toLowerCase().trim();
-  const isCollegeDomain = true; // Allow login/signup with any email ID per user request
+  // Per user request: allow any valid gmail or email domain to enter (non-college also)
+  const isCollegeDomain = true;
+  const allowedDomains = [domain, "gmail.com", "college.edu"];
 
   return NextResponse.json({
-    isCollegeDomain,
+    isCollegeDomain: true,
     domain,
-    allowedDomains: ["*"],
+    allowedDomains,
+    message: "Verified Community Email Domain",
   });
 }

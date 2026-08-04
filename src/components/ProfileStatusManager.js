@@ -89,7 +89,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
       setActivelyLooking(false);
       setFoundAt(data.profile?.found_roommate_at || new Date().toISOString());
       setToastMessage(
-        "🎉 Congratulations on finding your roommate! Your success metric is recorded per §3.7."
+        "🎉 Congratulations on finding your roommate! Your profile is now hidden from roommate search."
       );
 
       if (onStatusUpdate && data.profile) {
@@ -163,7 +163,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-300 mb-2">
-            PRD §3.2 &amp; §3.7 Status Toggles
+            Search &amp; Availability Controls
           </div>
           <h2 className="text-xl font-bold text-white">Roommate Search Status</h2>
           <p className="text-sm text-slate-300">
@@ -217,7 +217,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
                 {foundRoommate
                   ? "Disabled because you marked roommate found."
                   : activelyLooking
-                  ? `Confirmed on ${formatDate(confirmedAt) || "Today"}. Auto-expires to false after 30 days of inactivity (§3.2).`
+                  ? `Confirmed on ${formatDate(confirmedAt) || "Today"}. Auto-pauses after 30 days of inactivity.`
                   : "Paused. You are hidden from other students' searches."}
               </p>
             </div>
@@ -243,7 +243,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
           </div>
         </div>
 
-        {/* Toggle 2: Found Roommate (Primary Success Metric §3.7) */}
+        {/* Toggle 2: Found Roommate */}
         <div className="rounded-2xl border border-purple-500/30 bg-purple-500/5 p-5 flex flex-col justify-between">
           <div>
             <h3 className="text-base font-semibold text-white">
@@ -251,10 +251,10 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
             </h3>
             <p className="text-xs text-slate-400 mt-1">
               {foundRoommate
-                ? `Recorded success metric on ${
+                ? `Recorded success on ${
                     formatDate(foundAt) || "Today"
-                  }. Your profile is removed from matching searches per §3.7.`
-                : "Marking this logs the primary product success metric (§3.7) and removes your profile from searches."}
+                  }. Your profile is removed from matching searches.`
+                : "Marking this records your roommate match success and removes your profile from searches."}
             </p>
           </div>
 
@@ -282,10 +282,10 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
         </div>
       </div>
 
-      {/* Confirmation Step Dialog (Modal) per §3.7 */}
+      {/* Confirmation Modal */}
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-md rounded-3xl border border-white/20 bg-slate-900 p-6 md:p-8 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl space-y-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 text-xl">
                 🎉
@@ -296,9 +296,8 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
             </div>
 
             <p className="text-sm text-slate-300 leading-relaxed">
-              Congratulations! Confirming this will record the primary product success
-              metric (<strong>§3.7</strong>) and remove your profile from all future
-              roommate search results.
+              Congratulations! Confirming this will record your match success
+              and remove your profile from all future roommate search results.
             </p>
 
             <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">

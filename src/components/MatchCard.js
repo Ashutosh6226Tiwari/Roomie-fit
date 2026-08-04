@@ -148,10 +148,10 @@ export default function MatchCard({ match, requesterProfile, rank }) {
     .toUpperCase();
 
   return (
-    <div className="card-3d group relative flex flex-col overflow-hidden rounded-3xl p-6 transition-all duration-400">
+    <div className="glass-card group relative flex flex-col overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:border-indigo-500/40 hover:shadow-2xl hover:shadow-indigo-500/10">
       {/* Top Rank Ribbon if Rank 1 */}
       {rank === 1 && (
-        <div className="absolute -right-12 top-6 rotate-45 bg-gradient-to-r from-amber-500 to-amber-600 px-12 py-1 text-center text-xs font-black uppercase tracking-widest text-slate-950 shadow-lg">
+        <div className="absolute -right-12 top-6 rotate-45 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 px-12 py-1 text-center text-xs font-black uppercase tracking-widest text-slate-950 shadow-lg">
           Top Match ★
         </div>
       )}
@@ -163,21 +163,21 @@ export default function MatchCard({ match, requesterProfile, rank }) {
             <img
               src={candidate.photo_url}
               alt={candidate.full_name}
-              className="h-16 w-16 rounded-2xl border-2 border-indigo-500/40 object-cover shadow-md"
+              className="h-16 w-16 rounded-2xl border-2 border-indigo-500/40 object-cover shadow-md transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-xl font-bold text-white shadow-md">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 text-xl font-black text-white shadow-lg shadow-indigo-500/25 transition-transform duration-300 group-hover:scale-105">
               {initials}
             </div>
           )}
 
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xl font-extrabold text-white">
+              <h3 className="text-xl font-extrabold text-white tracking-tight">
                 {candidate.full_name}
               </h3>
               <span
-                className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${theme.bg} ${theme.border} ${theme.text}`}
+                className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${theme.bg} ${theme.border} ${theme.text}`}
               >
                 {theme.badge}
               </span>
@@ -191,13 +191,13 @@ export default function MatchCard({ match, requesterProfile, rank }) {
         {/* Circular Score Progress Ring Badge per PRD §3.5 */}
         <div className="flex flex-col items-center justify-center">
           <div className="relative flex h-20 w-20 items-center justify-center">
-            <svg className="h-full w-full -rotate-90" viewBox="0 0 80 80">
+            <svg className="h-full w-full -rotate-90 drop-shadow-[0_0_8px_rgba(99,102,241,0.25)]" viewBox="0 0 80 80">
               {/* Background circle */}
               <circle
                 cx="40"
                 cy="40"
                 r="34"
-                className="stroke-slate-800"
+                className="stroke-white/10"
                 strokeWidth="7"
                 fill="none"
               />
@@ -219,7 +219,7 @@ export default function MatchCard({ match, requesterProfile, rank }) {
               <span className={`text-xl font-black ${theme.text}`}>
                 {score}%
               </span>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
                 Match
               </span>
             </div>
@@ -228,12 +228,12 @@ export default function MatchCard({ match, requesterProfile, rank }) {
       </div>
 
       {/* AI Compatibility Analysis Card (Combined Paragraph per §3.5) */}
-      <div className="mt-6 rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4">
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400">
-          <span>✨</span>
+      <div className="ai-summary-card mt-6 rounded-2xl p-5">
+        <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-indigo-300">
+          <span className="animate-pulse">✨</span>
           <span>AI Compatibility Analysis</span>
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-slate-300">
+        <p className="mt-2.5 text-sm leading-relaxed text-slate-200">
           {fullSummary}
         </p>
       </div>

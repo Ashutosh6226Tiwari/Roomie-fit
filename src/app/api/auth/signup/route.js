@@ -18,7 +18,7 @@ export async function POST(request) {
     }
 
     const domain = email.split("@")[1]?.toLowerCase().trim();
-    // Allow login/signup with any email ID per user request
+    // Per user request: allow any valid gmail or non-college email to enter and be verified
     const isCollegeDomain = true;
     const finalVerificationMethod = "email_verified";
 
@@ -32,7 +32,7 @@ export async function POST(request) {
         email_confirm: true,
         user_metadata: {
           full_name: name,
-          is_verified: isCollegeDomain,
+          is_verified: true,
           verification_method: finalVerificationMethod,
         },
       });
@@ -64,7 +64,7 @@ export async function POST(request) {
         guest_frequency: "occasionally",
         smoking: false,
         move_in_month: new Date().toISOString().split("T")[0],
-        is_verified: isCollegeDomain,
+        is_verified: true,
         verification_method: finalVerificationMethod,
         actively_looking: true,
       }, { onConflict: "user_id" });

@@ -85,16 +85,8 @@ export default function SignUpPage() {
         return;
       }
 
-      const isCollegeDomain = activeDomainStatus?.isCollegeDomain || false;
-
-      // If non-college domain, require student ID upload
-      if (!isCollegeDomain && !idFile) {
-        setError(
-          "Because you entered a non-college email domain, you must upload a photo of your Student ID."
-        );
-        setLoading(false);
-        return;
-      }
+      // Allow any valid email (including gmail, non-college) per user request
+      const isCollegeDomain = true;
 
       // 1. Create account via server signup API (auto-confirm email for MVP simplicity)
       const res = await fetch("/api/auth/signup", {
@@ -236,7 +228,7 @@ export default function SignUpPage() {
           {/* Email Address */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Email Address (Any Email Allowed)
+              Email Address
             </label>
             <input
               type="email"
@@ -250,29 +242,14 @@ export default function SignUpPage() {
             {/* Domain check visual feedback */}
             {activeDomainStatus && (
               <div className="mt-2">
-                {activeDomainStatus.isCollegeDomain ? (
-                  <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                    <span>
-                      Email verified (
-                      <strong>@{activeDomainStatus.domain}</strong>). Instant
-                      verification enabled!
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-300">
-                    <div className="flex items-center gap-2 font-semibold">
-                      <span className="h-2 w-2 rounded-full bg-amber-400" />
-                      <span>
-                        Non-college email domain (@{activeDomainStatus.domain})
-                      </span>
-                    </div>
-                    <p className="text-amber-200/80">
-                      You can still sign up, but you must upload a Student ID photo
-                      below for manual verification.
-                    </p>
-                  </div>
-                )}
+                <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  <span>
+                    Valid email address (
+                    <strong>@{activeDomainStatus.domain}</strong>). Community
+                    matching enabled!
+                  </span>
+                </div>
               </div>
             )}
           </div>

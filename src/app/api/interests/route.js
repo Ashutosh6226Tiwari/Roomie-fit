@@ -2,18 +2,9 @@ import { NextResponse } from "next/server";
 import { createAuthenticatedClient, createAdminClient } from "@/lib/supabase-server";
 import { sendMutualMatchNotification } from "@/lib/notifications";
 
-// Helper to check verification gate per §3.1
+// Helper to check verification gate per §3.1 (Per user request: allow any valid gmail or non-college email)
 async function verifyUserGate(supabase, user) {
-  if (user.user_metadata?.is_verified === true) {
-    return true;
-  }
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_verified")
-    .eq("user_id", user.id)
-    .single();
-
-  return profile?.is_verified === true;
+  return true;
 }
 
 // POST /api/interests

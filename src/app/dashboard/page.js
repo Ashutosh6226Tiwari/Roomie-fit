@@ -28,7 +28,8 @@ export default async function DashboardPage() {
     .eq("user_id", user.id)
     .single();
 
-  const isVerified = profile?.is_verified === true;
+  // Per user request: allow any valid gmail / non-college email to enter without verification pending screen
+  const isVerified = true;
 
   return (
     <div className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-6 py-12">
@@ -43,16 +44,15 @@ export default async function DashboardPage() {
               </div>
 
               <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Student ID Under Manual Review
+                Account Under Manual Review
               </h1>
 
               <p className="text-base text-slate-300">
-                You signed up with a non-college email domain (
+                You signed up with email (
                 <strong className="text-amber-300">{profile?.email || user.email}</strong>
-                ). To ensure a trusted student-only community per §3.1, your uploaded
-                Student ID is currently pending review (
+                ). To ensure a trusted community, your account is currently pending review (
                 <code className="text-xs bg-black/40 px-1.5 py-0.5 rounded text-amber-400">
-                  {profile?.verification_method || "student_id_pending"}
+                  {profile?.verification_method || "pending"}
                 </code>
                 ).
               </p>
@@ -80,30 +80,35 @@ export default async function DashboardPage() {
           /* Verified College Student Dashboard - Find My Roommates Experience (§3.3 & §3.5) */
           <div className="space-y-8">
             {/* Welcome & Status Banner */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  College Verified ({profile?.verification_method || "college_email"})
+            <div className="glass-card relative overflow-hidden rounded-3xl p-8 md:p-10 transition-all">
+              <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br from-indigo-500/20 via-purple-500/15 to-transparent blur-3xl" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="space-y-2.5">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold text-emerald-300 shadow-sm">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Verified Community Member • AI Engine Active
+                  </div>
+                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-md">
+                    Find My Roommates
+                  </h1>
+                  <p className="text-sm text-slate-300">
+                    Welcome back,{" "}
+                    <strong className="text-white font-extrabold">
+                      {profile?.full_name || "Student"}
+                    </strong>
+                    ! Explore top AI-ranked roommate matches in{" "}
+                    <span className="text-indigo-300 font-bold">{profile?.city || "your city"}</span>.
+                  </p>
                 </div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-white">
-                  Find My Roommates
-                </h1>
-                <p className="text-sm text-slate-400">
-                  Welcome back,{" "}
-                  <strong className="text-white">
-                    {profile?.full_name || "Student"}
-                  </strong>
-                  ! Explore top AI-ranked roommate matches in {profile?.city || "your city"}.
-                </p>
-              </div>
 
-              <Link
-                href="/dashboard/profile"
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/60 px-6 py-3 text-sm font-semibold text-slate-200 shadow-md transition-all hover:border-slate-600 hover:text-white"
-              >
-                Edit My Profile →
-              </Link>
+                <Link
+                  href="/dashboard/profile"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105 hover:shadow-indigo-500/40"
+                >
+                  <span>Edit My Profile</span>
+                  <span>→</span>
+                </Link>
+              </div>
             </div>
 
             {/* PRD §3.2 & §3.7 Status Control Panel */}

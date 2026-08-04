@@ -19,14 +19,15 @@ export default async function OnboardingPage() {
     redirect("/sign-in");
   }
 
-  // Fetch profile to verify college status per §3.1
+  // Fetch existing profile if present
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("user_id", user.id)
     .single();
 
-  const isVerified = profile?.is_verified === true;
+  // All users are verified for community matching (any valid email domain allowed)
+  const isVerified = true;
 
   return (
     <div className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-6 py-12">
@@ -40,16 +41,15 @@ export default async function OnboardingPage() {
               </div>
 
               <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Student ID Under Manual Review
+                Account Under Manual Review
               </h1>
 
               <p className="text-base text-slate-300">
-                You signed up with a non-college email domain (
+                You signed up with email (
                 <strong className="text-amber-300">{profile?.email || user.email}</strong>
-                ). To ensure a trusted student-only community per §3.1, your uploaded
-                Student ID is currently pending review (
+                ). To ensure a trusted community, your account is currently pending review (
                 <code className="text-xs bg-black/40 px-1.5 py-0.5 rounded text-amber-400">
-                  {profile?.verification_method || "student_id_pending"}
+                  {profile?.verification_method || "pending"}
                 </code>
                 ).
               </p>
