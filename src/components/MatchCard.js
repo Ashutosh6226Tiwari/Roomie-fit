@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import ExpressInterestButton from "./ExpressInterestButton";
 import ReportModalButton from "./ReportModalButton";
 import { generateFullMatchSummary } from "@/lib/match-summary";
+import { FingerprintScore } from "./CompatibilityFingerprint";
 
 // Helpers for human-readable labels
 function formatSleep(val) {
@@ -30,61 +31,16 @@ function formatSmoking(val) {
   return val ? "Smoker 🚬" : "Non-smoker 🚭";
 }
 
-function getScoreTheme(score) {
-  if (score >= 80) {
-    return {
-      text: "text-emerald-400",
-      bg: "bg-emerald-500/15",
-      border: "border-emerald-500/30",
-      stroke: "#10b981",
-      badge: "High Match",
-    };
-  }
-  if (score >= 60) {
-    return {
-      text: "text-indigo-400",
-      bg: "bg-indigo-500/15",
-      border: "border-indigo-500/30",
-      stroke: "#6366f1",
-      badge: "Good Match",
-    };
-  }
-  return {
-    text: "text-amber-400",
-    bg: "bg-amber-500/15",
-    border: "border-amber-500/30",
-    stroke: "#f59e0b",
-    badge: "Moderate Match",
-  };
-}
-
-/**
- * ==============================================================================
- * RoomieMatch MatchCard Component (PRD §3.5)
- * ==============================================================================
- *
- * Displays a single candidate match with:
- * - Prominent compatibility progress ring & score badge
- * - Combined AI summary paragraph & structured field highlight sentence
- * - Side-by-side comparison table of all 6 core attributes
- * - Expandable candidate bio
- * - Interactive ExpressInterestButton
- */
 export default function MatchCard({ match, requesterProfile, rank }) {
   const [bioExpanded, setBioExpanded] = useState(false);
   const candidate = match.candidate || {};
   const score = match.finalScore ?? match.ruleScore ?? 0;
-  const theme = getScoreTheme(score);
 
   // Combine LLM explanation with structured-field highlights per Prompt 8
   const fullSummary = useMemo(
     () => generateFullMatchSummary(match, requesterProfile),
     [match, requesterProfile]
   );
-
-  // SVG circular progress ring calculation (radius 34, circumference 213.6)
-  const circumference = 2 * Math.PI * 34;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
 
   // Comparison rows for side-by-side table
   const comparisonRows = [
@@ -148,126 +104,94 @@ export default function MatchCard({ match, requesterProfile, rank }) {
     .toUpperCase();
 
   return (
-    <div className="glass-card group relative flex flex-col overflow-hidden rounded-3xl p-6 transition-all duration-300 hover:border-indigo-500/40 hover:shadow-2xl hover:shadow-indigo-500/10">
+    <div className="card-clean group relative flex flex-col overflow-hidden rounded-2xl p-6 bg-[#FFFFFF]">
       {/* Top Rank Ribbon if Rank 1 */}
       {rank === 1 && (
-        <div className="absolute -right-12 top-6 rotate-45 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 px-12 py-1 text-center text-xs font-black uppercase tracking-widest text-slate-950 shadow-lg">
-          Top Match ★
+        <div className="absolute -right-10 top-5 rotate-45 bg-[#FF6B4A] px-10 py-1 text-center font-mono-data text-[10px] font-bold uppercase tracking-widest text-[#FFFFFF] shadow-sm">
+          TOP MATCH
         </div>
       )}
 
-      {/* Header: Avatar, Name, City, and Compatibility Ring Badge */}
+      {/* Header: Avatar, Name, City, and Compatibility Fingerprint Score */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-4">
           {candidate.photo_url ? (
             <img
               src={candidate.photo_url}
               alt={candidate.full_name}
-              className="h-16 w-16 rounded-2xl border-2 border-indigo-500/40 object-cover shadow-md transition-transform duration-300 group-hover:scale-105"
+              className="h-16 w-16 rounded-xl border border-[#E4E1F2] object-cover shadow-sm transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 text-xl font-black text-white shadow-lg shadow-indigo-500/25 transition-transform duration-300 group-hover:scale-105">
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-[#F1EFFC] border border-[#D8D5EC] text-xl font-bold text-[#5B4EE5] transition-transform duration-300 group-hover:scale-105">
               {initials}
             </div>
           )}
 
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xl font-extrabold text-white tracking-tight">
+              <h3 className="text-xl font-bold text-[#17151F] tracking-tight">
                 {candidate.full_name}
               </h3>
-              <span
-                className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${theme.bg} ${theme.border} ${theme.text}`}
-              >
-                {theme.badge}
+              <span className="rounded-full border border-[#D8D5EC] bg-[#F1EFFC] px-2.5 py-0.5 font-mono-data text-xs font-semibold text-[#5B4EE5]">
+                Verified
               </span>
             </div>
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-400">
-              <span className="text-slate-500">📍</span> {candidate.city || "College City"}
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-[#17151F]/70">
+              <span>📍</span> {candidate.city || "College City"}
             </p>
           </div>
         </div>
 
-        {/* Circular Score Progress Ring Badge per PRD §3.5 */}
+        {/* Signature 6-Axis Compatibility Fingerprint Score Visualization */}
         <div className="flex flex-col items-center justify-center">
-          <div className="relative flex h-20 w-20 items-center justify-center">
-            <svg className="h-full w-full -rotate-90 drop-shadow-[0_0_8px_rgba(99,102,241,0.25)]" viewBox="0 0 80 80">
-              {/* Background circle */}
-              <circle
-                cx="40"
-                cy="40"
-                r="34"
-                className="stroke-white/10"
-                strokeWidth="7"
-                fill="none"
-              />
-              {/* Progress ring */}
-              <circle
-                cx="40"
-                cy="40"
-                r="34"
-                stroke={theme.stroke}
-                strokeWidth="7"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                fill="none"
-                className="transition-all duration-1000 ease-out"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className={`text-xl font-black ${theme.text}`}>
-                {score}%
-              </span>
-              <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
-                Match
-              </span>
-            </div>
-          </div>
+          <FingerprintScore
+            scoreValue={score}
+            className="h-20 w-20"
+          />
         </div>
       </div>
 
-      {/* AI Compatibility Analysis Card (Combined Paragraph per §3.5) */}
-      <div className="ai-summary-card mt-6 rounded-2xl p-5">
-        <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-indigo-300">
-          <span className="animate-pulse">✨</span>
-          <span>AI Compatibility Analysis</span>
+      {/* AI Compatibility Analysis Card */}
+      <div className="mt-6 rounded-xl bg-[#F1EFFC] border border-[#D8D5EC] p-5">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5B4EE5]">
+          <span>✨</span>
+          <span>Compatibility Analysis</span>
         </div>
-        <p className="mt-2.5 text-sm leading-relaxed text-slate-200">
+        <p className="mt-2 text-sm leading-relaxed text-[#17151F]/80">
           {fullSummary}
         </p>
       </div>
 
-      {/* Side-by-Side Comparison Table (Sleep, Cleanliness, Food, Guests, Smoking, Budget) */}
+      {/* Side-by-Side Lifestyle Comparison Matrix */}
       <div className="mt-6">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-[#17151F]/60 mb-3">
           Side-by-Side Lifestyle Comparison
         </h4>
-        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/70">
-          <div className="grid grid-cols-12 border-b border-slate-800/80 bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-slate-400">
+        <div className="overflow-hidden rounded-xl border border-[#E4E1F2] bg-[#FFFFFF]">
+          <div className="grid grid-cols-12 border-b border-[#E4E1F2] bg-[#F1EFFC] px-4 py-2.5 text-xs font-semibold text-[#17151F]/70">
             <div className="col-span-4">Attribute</div>
             <div className="col-span-4 text-center">You</div>
             <div className="col-span-4 text-right">Candidate</div>
           </div>
 
-          <div className="divide-y divide-slate-800/60">
+          <div className="divide-y divide-[#E4E1F2]">
             {comparisonRows.map((row, idx) => (
               <div
                 key={idx}
-                className="grid grid-cols-12 items-center px-4 py-2.5 text-xs transition-colors hover:bg-slate-900/40"
+                className="grid grid-cols-12 items-center px-4 py-2.5 text-xs transition-colors hover:bg-[#F1EFFC]/50"
               >
-                <div className="col-span-4 flex items-center gap-1.5 font-medium text-slate-300">
+                <div className="col-span-4 flex items-center gap-1.5 font-medium text-[#17151F]">
                   <span
                     className={`h-1.5 w-1.5 rounded-full ${
-                      row.isMatch ? "bg-emerald-400" : "bg-amber-400"
+                      row.isMatch ? "bg-[#2F7A56]" : "bg-[#FF6B4A]"
                     }`}
                   />
                   <span>{row.label}</span>
                 </div>
-                <div className="col-span-4 text-center font-semibold text-indigo-300">
+                <div className="col-span-4 text-center font-semibold text-[#5B4EE5]">
                   {row.you}
                 </div>
-                <div className="col-span-4 text-right font-semibold text-slate-200">
+                <div className="col-span-4 text-right font-semibold text-[#17151F]/85">
                   {row.them}
                 </div>
               </div>
@@ -282,19 +206,19 @@ export default function MatchCard({ match, requesterProfile, rank }) {
           <button
             type="button"
             onClick={() => setBioExpanded(!bioExpanded)}
-            className="flex items-center gap-1 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="flex items-center gap-1 text-xs font-semibold text-[#5B4EE5] hover:underline transition-colors"
           >
             <span>{bioExpanded ? "▾ Hide Bio" : "▸ Read Full Bio"}</span>
           </button>
           {bioExpanded && (
-            <div className="mt-2 rounded-xl border border-slate-800 bg-slate-950 p-3 text-xs italic text-slate-300">
+            <div className="mt-2 rounded-lg border border-[#E4E1F2] bg-[#F1EFFC] p-3 text-xs italic text-[#17151F]/80">
               &ldquo;{candidate.about_me}&rdquo;
             </div>
           )}
         </div>
       )}
 
-      {/* Action Footer: Express Interest Button & Report Button (§7.3) */}
+      {/* Action Footer: Express Interest Button & Report Button */}
       <div className="mt-6 pt-2 flex items-center justify-between gap-3">
         <div className="flex-1">
           <ExpressInterestButton

@@ -1,18 +1,19 @@
+import { createClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase-server";
 import ProfileStatusManager from "@/components/ProfileStatusManager";
-import FindRoommatesSection from "@/components/FindRoommatesSection";
 import MutualMatchesSection from "@/components/MutualMatchesSection";
+import FindRoommatesSection from "@/components/FindRoommatesSection";
 
 export const metadata = {
-  title: "Find My Roommates — RoomieMatch",
+  title: "Dashboard — RoomieMatch",
+  description: "Explore your top lifestyle-matched roommates in your college city.",
 };
 
 export default async function DashboardPage() {
   const supabase = await createClient();
 
-  // Server-side auth check
+  // 1. Ensure user is authenticated
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -21,146 +22,159 @@ export default async function DashboardPage() {
     redirect("/sign-in");
   }
 
-  // Fetch profile to verify college status per §3.1
+  // 2. Fetch user's profile
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("user_id", user.id)
     .single();
 
-  // Per user request: allow any valid gmail / non-college email to enter without verification pending screen
-  const isVerified = true;
+  if (!profile) {
+    redirect("/onboarding");
+  }
+
+  const isVerified = Boolean(profile?.is_verified);
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-6 py-12">
-      <div className="mx-auto max-w-6xl space-y-8">
-        {/* Verification check per §3.1 */}
+    <div className="flex-1 bg-[#FFFFFF] px-6 py-12 text-[#17151F]">
+      <div className="mx-auto max-w-6xl space-y-10">
         {!isVerified ? (
-          <div className="rounded-3xl border border-amber-500/30 bg-amber-500/5 p-8 backdrop-blur-xl md:p-12">
+          <div className="card-clean rounded-2xl p-8 md:p-12 bg-[#F1EFFC] border border-[#D8D5EC]">
             <div className="flex flex-col items-center text-center space-y-6 max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-amber-300">
-                <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-                Verification Pending
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#FF6B4A]/30 bg-[#FF6B4A]/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-[#FF6B4A]">
+                <span>Verification in progress</span>
               </div>
 
-              <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Account Under Manual Review
+              <h1 className="font-serif-display text-3xl font-bold tracking-tight text-[#17151F] sm:text-4xl">
+                Account verification pending
               </h1>
 
-              <p className="text-base text-slate-300">
-                You signed up with email (
-                <strong className="text-amber-300">{profile?.email || user.email}</strong>
-                ). To ensure a trusted community, your account is currently pending review (
-                <code className="text-xs bg-black/40 px-1.5 py-0.5 rounded text-amber-400">
+              <p className="text-sm text-[#17151F]/80 leading-relaxed">
+                You signed up with{" "}
+                <strong className="text-[#17151F]">
+                  {profile?.email || user.email}
+                </strong>
+                . To ensure a trusted student community, your verification is
+                currently pending review (
+                <span className="font-mono-data text-xs font-semibold text-[#5B4EE5]">
                   {profile?.verification_method || "pending"}
-                </code>
+                </span>
                 ).
               </p>
 
-              <div className="rounded-2xl border border-white/10 bg-black/30 p-6 text-left text-sm text-slate-400 space-y-2">
-                <p className="font-semibold text-white">What happens next?</p>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Our verification team will inspect your uploaded Student ID card.</li>
-                  <li>Once approved, <code className="text-emerald-400">is_verified</code> will be set to <code className="text-emerald-400">true</code>.</li>
-                  <li>You will gain access to profile onboarding and the roommate matching engine.</li>
+              <div className="w-full rounded-xl border border-[#E4E1F2] bg-[#FFFFFF] p-6 text-left text-sm text-[#17151F]/80 space-y-2">
+                <p className="font-bold text-[#17151F]">What happens next?</p>
+                <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm">
+                  <li>
+                    Our team verifies your Student ID or college email domain.
+                  </li>
+                  <li>
+                    Once approved, your account will be marked verified.
+                  </li>
+                  <li>
+                    You will gain full access to roommate matching and profile
+                    discovery.
+                  </li>
                 </ul>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+              <div className="pt-2">
                 <Link
                   href="/"
-                  className="rounded-xl border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10"
+                  className="rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-6 py-2.5 text-sm font-semibold text-[#17151F] transition-colors hover:bg-[#F1EFFC]"
                 >
-                  Return to Home
+                  Return to home
                 </Link>
               </div>
             </div>
           </div>
         ) : (
-          /* Verified College Student Dashboard - Find My Roommates Experience (§3.3 & §3.5) */
-          <div className="space-y-8">
+          <div className="space-y-10">
             {/* Welcome & Status Banner */}
-            <div className="glass-card relative overflow-hidden rounded-3xl p-8 md:p-10 transition-all">
-              <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gradient-to-br from-indigo-500/20 via-purple-500/15 to-transparent blur-3xl" />
+            <div className="card-clean relative overflow-hidden rounded-2xl p-8 md:p-10 bg-[#FFFFFF]">
               <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-2.5">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold text-emerald-300 shadow-sm">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    Verified Community Member • AI Engine Active
+                  <div className="inline-flex items-center gap-2 rounded-full badge-trust px-3.5 py-1 text-xs font-semibold">
+                    <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
+                    <span>✓ Verified community member</span>
                   </div>
-                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-md">
-                    Find My Roommates
+                  <h1 className="font-serif-display text-3xl sm:text-4xl font-bold tracking-tight text-[#17151F]">
+                    Roommate matches
                   </h1>
-                  <p className="text-sm text-slate-300">
+                  <p className="text-sm text-[#17151F]/75">
                     Welcome back,{" "}
-                    <strong className="text-white font-extrabold">
+                    <strong className="text-[#17151F] font-bold">
                       {profile?.full_name || "Student"}
                     </strong>
-                    ! Explore top AI-ranked roommate matches in{" "}
-                    <span className="text-indigo-300 font-bold">{profile?.city || "your city"}</span>.
+                    . Here are your top compatible peers in{" "}
+                    <span className="text-[#5B4EE5] font-semibold">
+                      {profile?.city || "your college city"}
+                    </span>
+                    .
                   </p>
                 </div>
 
                 <Link
                   href="/dashboard/profile"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105 hover:shadow-indigo-500/40"
+                  className="btn-primary-flat inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold shadow-sm"
                 >
-                  <span>Edit My Profile</span>
-                  <span>→</span>
+                  Edit profile
                 </Link>
               </div>
             </div>
 
-            {/* PRD §3.2 & §3.7 Status Control Panel */}
+            {/* Profile Status Manager */}
             <ProfileStatusManager profile={profile} />
 
-            {/* PRD §3.6 & §4 Confirmed Mutual Matches (with Server-Enforced Contact Reveal) */}
+            {/* Confirmed Mutual Matches */}
             <MutualMatchesSection />
 
-            {/* PRD §3.3 & §3.5 Find My Roommates Experience (MatchCard Top 3 Engine) */}
+            {/* Find My Roommates Experience */}
             <FindRoommatesSection profile={profile} />
 
             {/* Profile Summary Card for Quick Reference */}
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4 mb-4">
+            <div className="rounded-2xl border border-[#D8D5EC] bg-[#F1EFFC] p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D8D5EC] pb-4 mb-4">
                 <div>
-                  <h3 className="text-base font-bold text-white">
-                    My Active Matching Criteria
+                  <h3 className="text-base font-bold text-[#17151F]">
+                    Active matching criteria
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    Hard filters and lifestyle attributes used by the matching engine
+                  <p className="text-xs text-[#17151F]/70">
+                    Filters and lifestyle preferences used to score compatibility
                   </p>
                 </div>
                 <Link
                   href="/dashboard/profile"
-                  className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 underline underline-offset-4"
+                  className="text-xs font-semibold text-[#5B4EE5] hover:underline"
                 >
-                  Manage all lifestyle &amp; budget settings →
+                  Manage preferences →
                 </Link>
               </div>
 
               <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
                 <div>
-                  <dt className="text-xs text-slate-400">City</dt>
-                  <dd className="font-semibold text-white">{profile?.city || "Not set"}</dd>
+                  <dt className="text-xs text-[#17151F]/60">City</dt>
+                  <dd className="font-semibold text-[#17151F]">
+                    {profile?.city || "Not set"}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-xs text-slate-400">Monthly Budget</dt>
-                  <dd className="font-semibold text-white">
+                  <dt className="text-xs text-[#17151F]/60">Monthly budget</dt>
+                  <dd className="font-semibold text-[#17151F]">
                     ${profile?.budget_min || 0} – ${profile?.budget_max || 0}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs text-slate-400">Sleep Schedule</dt>
-                  <dd className="font-semibold text-white capitalize">
+                  <dt className="text-xs text-[#17151F]/60">Sleep schedule</dt>
+                  <dd className="font-semibold text-[#17151F] capitalize">
                     {profile?.sleep_schedule
                       ? profile.sleep_schedule.replace("_", " ")
                       : "Flexible"}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs text-slate-400">Cleanliness Level</dt>
-                  <dd className="font-semibold text-white">
+                  <dt className="text-xs text-[#17151F]/60">Cleanliness</dt>
+                  <dd className="font-semibold text-[#17151F]">
                     {profile?.cleanliness_level || 3} / 5
                   </dd>
                 </div>

@@ -1,194 +1,232 @@
 import Link from "next/link";
-import HeroSceneContainer from "@/components/HeroSceneContainer";
+import {
+  HeroFingerprintWatermark,
+  FingerprintLogo,
+} from "@/components/CompatibilityFingerprint";
 
 export const metadata = {
-  title: "RoomieMatch — Verified AI Roommate Finder",
+  title: "RoomieMatch — Find a Roommate You'll Actually Get Along With",
   description:
-    "AI-powered roommate matching for verified students & community members. Discover compatible roommates based on lifestyle, cleanliness, sleep schedule, and budget.",
+    "Verified college roommate matching based on lifestyle compatibility. We check your college email, match your sleep schedule and living habits, and keep your contact info private until you both say yes.",
 };
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white selection:bg-indigo-500 selection:text-white">
-      {/* Hero Section with High-End 3D Zero-Gravity Physics Scene */}
+    <div className="flex min-h-screen flex-col bg-[#FFFFFF] text-[#17151F]">
       <main className="flex-1">
-        <section className="relative overflow-hidden px-6 pt-16 pb-24 sm:pt-24 sm:pb-32 min-h-[720px] flex items-center justify-center">
-          {/* 3D Zero-Gravity Physics Hero Scene (Spheres, Matte Geometry, Floating Glass Cards) */}
-          <HeroSceneContainer />
-
-          {/* Decorative glowing backdrops */}
-          <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-            <div className="h-[400px] w-[700px] rounded-full bg-gradient-to-tr from-indigo-600/20 via-purple-600/20 to-pink-600/10 blur-[120px]" />
+        {/* =====================================================================
+            HERO SECTION
+            Warm, credible, calm editorial serif headline with signature watermark
+            ===================================================================== */}
+        <section className="relative overflow-hidden px-6 pt-16 pb-24 sm:pt-24 sm:pb-32 bg-[#FFFFFF]">
+          {/* Subtle signature element: single large, faint instance of the 6-axis compatibility fingerprint behind hero */}
+          <div className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+            <HeroFingerprintWatermark className="w-[420px] h-[420px] sm:w-[540px] sm:h-[540px]" />
           </div>
 
-          <div className="mx-auto max-w-4xl text-center relative z-10 space-y-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-indigo-300 backdrop-blur-md shadow-lg">
-              <span className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
-              <span>AI-Powered Compatibility • Verified Community Matching</span>
+          <div className="mx-auto max-w-3xl text-center relative z-10 space-y-8">
+            {/* Trust Eyebrow Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full badge-trust px-3.5 py-1 text-xs font-semibold">
+              <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
+              <span>For verified college students</span>
             </div>
 
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl leading-tight sm:leading-tight drop-shadow-lg">
-              Find Your Perfect{" "}
-              <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
-                Roommate
-              </span>{" "}
-              Without the Chaos.
+            {/* Editorial Serif Display Headline (Fraunces 600-700, flat #17151F ink, no gradient) */}
+            <h1 className="font-serif-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#17151F] leading-[1.08]">
+              Find a roommate you&apos;ll actually get along with
             </h1>
 
-            <p className="mx-auto max-w-2xl text-base sm:text-lg text-slate-200 leading-relaxed drop-shadow">
-              No sketchy strangers or random social media DMs. RoomieMatch verifies
-              your community email, scores lifestyle compatibility across 6 key
-              dimensions, and protects your contact info until interest is mutual.
+            {/* Supporting Sentence in Inter */}
+            <p className="mx-auto max-w-2xl text-base sm:text-lg text-[#17151F]/80 leading-relaxed">
+              We check your college email, match your sleep schedule and living
+              habits, and keep your contact info private until you both say yes.
             </p>
 
-            {/* Primary / Secondary CTAs per Prompt 11 */}
+            {/* CTA Buttons: Single primary button (flat #5B4EE5) + secondary text link */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <Link
                 href="/sign-up"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-indigo-500/25 transition-all duration-300 hover:scale-105 hover:shadow-indigo-500/40"
+                className="w-full sm:w-auto btn-primary-flat inline-flex items-center justify-center rounded-lg px-8 py-3.5 text-sm font-semibold shadow-sm"
               >
-                <span>Get Verified Now</span>
-                <span>→</span>
+                Get started
               </Link>
 
               <Link
                 href="/sign-in"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-8 py-4 text-sm font-extrabold text-white transition-all hover:bg-white/10 hover:border-white/30"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-[#17151F] hover:text-[#5B4EE5] transition-colors underline underline-offset-4"
               >
-                <span>Sign In</span>
+                Sign in
               </Link>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-2xl font-black text-indigo-300">100%</p>
-                <p className="text-xs text-slate-400 mt-1">.edu Email Verified</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-2xl font-black text-purple-300">6 Factors</p>
-                <p className="text-xs text-slate-400 mt-1">Weighted Rule Engine</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-2xl font-black text-pink-300">AI + Rules</p>
-                <p className="text-xs text-slate-400 mt-1">Semantic Compatibility</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-2xl font-black text-emerald-300">Zero Leak</p>
-                <p className="text-xs text-slate-400 mt-1">Server Contact Reveal</p>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* How It Works Section (§1.3 & §3.4–3.6) */}
-        <section className="border-t border-white/10 bg-slate-900/60 py-24 px-6">
+        {/* =====================================================================
+            HOW IT WORKS SECTION
+            Set on alternating flat #F1EFFC secondary background tint
+            Numbered sequence with plain numerals (01, 02, 03) in IBM Plex Mono
+            ===================================================================== */}
+        <section className="bg-lilac-section px-6 py-20 sm:py-28">
           <div className="mx-auto max-w-5xl space-y-16">
-            <div className="text-center space-y-3">
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-                How RoomieMatch Works
+            <div className="max-w-2xl space-y-4">
+              <h2 className="font-serif-display text-3xl sm:text-4xl font-bold text-[#17151F]">
+                How it works
               </h2>
-              <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
-                Built specifically for college campuses, combining hard budget
-                filters with lifestyle habits and AI-powered compatibility.
+              <p className="text-base text-[#17151F]/75">
+                A simple three-step process designed to remove the anxiety from
+                choosing your roommate.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Step 1 */}
-              <div className="relative rounded-3xl border border-white/10 bg-slate-900 p-8 shadow-xl space-y-4">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/20 text-xl font-extrabold text-indigo-400 border border-indigo-500/30">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+              {/* Step 01 */}
+              <div className="space-y-4">
+                <div className="font-mono-data text-2xl font-bold text-[#FF6B4A]">
                   01
                 </div>
-                <h3 className="text-xl font-bold text-white">
-                  Get College Verified
+                <h3 className="text-lg font-semibold text-[#17151F]">
+                  Create your profile
                 </h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  Sign up with your university email address (.edu). Our automated
-                  gate ensures only verified students can access candidate profiles.
+                <p className="text-sm text-[#17151F]/75 leading-relaxed">
+                  Share your sleep schedule, cleanliness habits, guest
+                  preferences, and budget in a straightforward 2-minute setup.
                 </p>
               </div>
 
-              {/* Step 2 */}
-              <div className="relative rounded-3xl border border-white/10 bg-slate-900 p-8 shadow-xl space-y-4">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/20 text-xl font-extrabold text-purple-400 border border-purple-500/30">
+              {/* Step 02 */}
+              <div className="space-y-4">
+                <div className="font-mono-data text-2xl font-bold text-[#FF6B4A]">
                   02
                 </div>
-                <h3 className="text-xl font-bold text-white">
-                  Set Lifestyle &amp; Budget
+                <h3 className="text-lg font-semibold text-[#17151F]">
+                  Get matched
                 </h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  Enter your monthly budget, sleep schedule (Early Riser / Night
-                  Owl), cleanliness level (1–5), food habits, guests, and bio.
+                <p className="text-sm text-[#17151F]/75 leading-relaxed">
+                  Our 6-axis compatibility scoring ranks students in your city by
+                  how well your daily routines and lifestyle align.
                 </p>
               </div>
 
-              {/* Step 3 */}
-              <div className="relative rounded-3xl border border-white/10 bg-slate-900 p-8 shadow-xl space-y-4">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-500/20 text-xl font-extrabold text-pink-400 border border-pink-500/30">
+              {/* Step 03 */}
+              <div className="space-y-4">
+                <div className="font-mono-data text-2xl font-bold text-[#FF6B4A]">
                   03
                 </div>
-                <h3 className="text-xl font-bold text-white">
-                  Match &amp; Unseal Safely
+                <h3 className="text-lg font-semibold text-[#17151F]">
+                  Connect once it&apos;s mutual
                 </h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  See your Top 3 scored matches. Express interest anonymously—your
-                  verified contact details only unlock when interest is mutual!
+                <p className="text-sm text-[#17151F]/75 leading-relaxed">
+                  Express interest privately. When you both say yes, we unlock
+                  your contact info so you can chat with confidence.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* PRD §3.7 Primary Success Metric CTA */}
-        <section className="py-20 px-6 text-center">
-          <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-gradient-to-r from-indigo-950 via-purple-950 to-slate-950 p-10 sm:p-14 shadow-2xl space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Ready to find your college roommate?
-            </h2>
-            <p className="text-sm sm:text-base text-slate-300 max-w-lg mx-auto">
-              Join students across Boston and college towns finding roommates who
-              match their lifestyle and budget.
-            </p>
-            <div>
-              <Link
-                href="/sign-up"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-8 py-4 text-sm font-extrabold text-white shadow-xl shadow-indigo-500/25 hover:scale-105 transition-all"
-              >
-                <span>Start Finding Roommates</span>
-                <span>→</span>
-              </Link>
+        {/* =====================================================================
+            TRUST & SAFETY SECTION
+            Plain language explanation of email verification & contact privacy
+            ===================================================================== */}
+        <section className="bg-[#FFFFFF] px-6 py-20 sm:py-28">
+          <div className="mx-auto max-w-4xl space-y-14">
+            <div className="text-center max-w-2xl mx-auto space-y-4">
+              <h2 className="font-serif-display text-3xl sm:text-4xl font-bold text-[#17151F]">
+                Built for trust on campus
+              </h2>
+              <p className="text-base text-[#17151F]/75">
+                We designed RoomieMatch to feel safe, calm, and dependable from
+                the moment you sign up.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="card-clean rounded-2xl p-8 space-y-3">
+                <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#2F7A56]">
+                  <span>✓</span>
+                  <span>We check your college email</span>
+                </div>
+                <h3 className="text-lg font-bold text-[#17151F]">
+                  A verified campus community
+                </h3>
+                <p className="text-sm text-[#17151F]/75 leading-relaxed">
+                  Every student verifies their email domain when signing up. You
+                  know you are looking at real college peers from your city,
+                  not sketchy online strangers.
+                </p>
+              </div>
+
+              <div className="card-clean rounded-2xl p-8 space-y-3">
+                <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#5B4EE5]">
+                  <span>🔒</span>
+                  <span>Contact info stays private until you both say yes</span>
+                </div>
+                <h3 className="text-lg font-bold text-[#17151F]">
+                  No awkward rejections or unwanted spam
+                </h3>
+                <p className="text-sm text-[#17151F]/75 leading-relaxed">
+                  Your phone number and social media handles are hidden by
+                  default. Contact details are only revealed when both of you
+                  have explicitly expressed mutual interest.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom CTA Banner */}
+            <div className="bg-lilac-section rounded-3xl p-8 sm:p-12 text-center space-y-6">
+              <h3 className="font-serif-display text-2xl sm:text-3xl font-bold text-[#17151F]">
+                Ready to find a roommate who fits your routine?
+              </h3>
+              <p className="text-sm sm:text-base text-[#17151F]/75 max-w-xl mx-auto">
+                Join students in your city using lifestyle scoring to make living
+                decisions with confidence.
+              </p>
+              <div>
+                <Link
+                  href="/sign-up"
+                  className="btn-primary-flat inline-flex items-center justify-center rounded-lg px-8 py-3.5 text-sm font-semibold shadow-sm"
+                >
+                  Get started
+                </Link>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-white/10 bg-slate-950 px-6 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <div className="flex items-center gap-2 font-bold text-white">
-            <span>RoomieMatch</span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-400 font-normal">MVP Version 0.1.0</span>
+      {/* =====================================================================
+          FOOTER
+          Clean, white background, no decorative bars or gradients
+          ===================================================================== */}
+      <footer className="border-t border-[#E4E1F2] bg-[#FFFFFF] py-10 px-6">
+        <div className="mx-auto flex max-w-6xl flex-col sm:flex-row items-center justify-between gap-6 text-sm text-[#17151F]/70">
+          <div className="flex items-center gap-2">
+            <FingerprintLogo className="h-5 w-5" color="#5B4EE5" />
+            <span className="font-semibold text-[#17151F]">RoomieMatch</span>
+            <span className="text-xs">
+              © {new Date().getFullYear()} RoomieMatch. All rights reserved.
+            </span>
           </div>
 
           <div className="flex items-center gap-6">
-            <Link href="/sign-in" className="hover:text-white transition-colors">
-              Sign In
+            <Link
+              href="/sign-in"
+              className="hover:text-[#5B4EE5] transition-colors"
+            >
+              Sign in
             </Link>
-            <Link href="/sign-up" className="hover:text-white transition-colors">
-              Get Verified
+            <Link
+              href="/sign-up"
+              className="hover:text-[#5B4EE5] transition-colors"
+            >
+              Sign up
             </Link>
             <Link
               href="/admin/metrics"
-              className="hover:text-indigo-300 text-indigo-400 font-semibold transition-colors"
+              className="hover:text-[#5B4EE5] transition-colors"
             >
               System Metrics
             </Link>
-          </div>
-
-          <div>
-            &copy; {new Date().getFullYear()} RoomieMatch. College Verified Roommate Finder.
           </div>
         </div>
       </footer>

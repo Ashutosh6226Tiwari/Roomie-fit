@@ -1,63 +1,60 @@
-# RoomieMatch — High-End UI/UX Design Blueprint (v2.0)
-*Bred for Excellence: A state-of-the-art, premium aesthetic that wows at first glance.*
+# RoomieMatch — Warm, Credible & Calm Design System (v3.0)
+
+*A trusted, campus-first aesthetic for college students making a genuinely personal and slightly anxious decision: who am I going to live with?*
 
 ---
 
-## 1. Core Visual Philosophy & Design System
-
-### A. The "Obsidian & Cyber-Violet" Color Palette
-Instead of generic dark grays and standard blue buttons, RoomieMatch uses a deep, curated HSL & HEX dark mode palette inspired by futuristic glassmorphic interfaces:
-- **Obsidian Void (Background)**: `#07070D` — ultra-deep black-violet canvas.
-- **Ambient Aura (Glows)**: Radial gradients of Electric Iris (`#6366F1`), Cyber Rose (`#EC4899`), and Aurora Cyan (`#06B6D4`) softly illuminating page corners and card borders.
-- **Multi-Layered Glassmorphic Cards**:
-  - `bg-white/[0.04]` to `bg-white/[0.07]`
-  - `backdrop-blur-2xl`
-  - Subtle glowing borders: `border border-white/[0.08]` (default) to `hover:border-indigo-500/40` on hover.
-  - Deep drop shadows: `shadow-2xl shadow-black/60`.
-
-### B. Typography Hierarchy
-- **Primary Display Font**: **Outfit / Geist Sans** (bold, geometric sans-serif for striking headings, hero titles, and percentage badges).
-- **Secondary Body Font**: **Inter / Plus Jakarta Sans** (crisp, high-legibility body font with refined letter-spacing for AI compatibility summaries and lifestyle data).
-
-### C. Dynamic Interactivity & Micro-Animations
-- **Hover Elevation**: All interactive elements (match cards, CTAs, navigation pills) feature smooth `-translate-y-1` elevation and subtle shadow glow expansion on hover.
-- **3D Zero-Gravity Hero (`ZeroGravityHero3D`)**: 5 glossy metallic spheres and floating glassmorphic cards drift in zero-gravity across the hero viewport, repelling gracefully from the user's cursor.
-- **Glowing Compatibility Rings**: Scored match percentages displayed inside animated SVG circular progress rings with gradient strokes and neon pulse indicators.
+## 1. Core Visual Philosophy & Emotional Tone
+- **Who this is for**: College students, mostly on their phones, making a personal and important living decision.
+- **What it should feel like**: Warm, credible, and calm — closer to a trusted campus service than a hyped-up AI startup. Confidence and reassurance, not flash.
+- **What is explicitly excluded**: No dark navy/purple gradient background, no floating glassy 3D orbs/shapes, no gradient-text keywords in headlines, no gradient pill badges, no bold generic sans-serif SaaS templates.
 
 ---
 
-## 2. Component-by-Component Overhaul Plan
-
-### Step 1: Floating Pill Navbar (`src/components/Navbar.js`)
-- Replaced standard full-width top border with a **floating glassmorphic pill bar** centered at the top of the viewport (`max-w-5xl mx-auto rounded-full bg-black/40 border border-white/10 backdrop-blur-2xl`).
-- Features glowing status indicators (`"✓ Verified Account"` in neon emerald), user initials badge, and clean navigation pills (`Matches`, `Preferences`, `My Profile`).
-
-### Step 2: Global Styles & Ambient Mesh (`src/app/globals.css`)
-- Custom scrollbar styling (`::-webkit-scrollbar` with frosted glass thumb).
-- Custom utility animations: `animate-float`, `animate-pulse-glow`, and smooth page entrance fade-in transitions.
-- High-contrast badge utilities for lifestyle pills (`Early Riser`, `Cleanliness 4/5`, `Budget $800-$1,200`).
-
-### Step 3: Premium MatchCard Component (`src/components/MatchCard.js`)
-- **Top Header**: Candidate name, city, university badge, and a **prominent circular compatibility ring** (0–100% with color grading: Emerald for 85%+, Indigo for 70–84%, Amber for <70%).
-- **AI Semantic Summary Card**: A dedicated glowing card section with an iridescent border highlighting the Claude AI semantic compatibility summary and shared routine insights.
-- **Side-by-Side Comparison Grid**: 6-dimension lifestyle matrix (Sleep, Cleanliness, Budget, Guests, Food, Smoking) using crisp iconography and visual match badges (`"Match"`, `"Similar"`, `"Differs"`).
-- **Action Toolbar**: An interactive **"👋 I'm Interested"** glowing gradient CTA button alongside a subtle, respectful **"Report profile"** shield icon button.
-
-### Step 4: The Landing Page (`src/app/page.js`)
-- **3D Zero-Gravity Hero Scene**: Full-screen canvas (`<HeroSceneContainer />`) with metallic spheres and floating glass cards.
-- **Typography & CTAs**: High-impact gradient headline, trust metric badges (`100% Verified`, `6-Factor AI Scoring`, `Zero Spam Guarantee`), and dual primary/secondary CTA buttons.
-- **Interactive "How It Works" Section**: 3 glowing glassmorphic cards with step numbers, micro-icons, and clear explanations.
-
-### Step 5: Find My Roommates Dashboard (`src/app/dashboard/page.js`)
-- **Dashboard Header Banner**: Personalized greeting, college verified badge, and quick stats showing available matches in their city.
-- **Responsive Match Grid**: Automatically adapts from single column on mobile (`375px`) to 2-column on tablet and rich full-width cards on desktop.
-- **Empty & Loading States**: Gorgeous skeleton pulse loaders and friendly empty-state illustrations.
+## 2. Color Palette (Exact Hex Values — Flat, No Gradients)
+Each color is used as a flat, deliberate choice (card background, icon, badge, button), never as a decorative gradient sweep:
+- **Background (primary)**: `#FFFFFF` — clean, crisp primary page canvas.
+- **Background (secondary, alternating sections)**: `#F1EFFC` — a very soft pale lilac tint, used as flat section backgrounds.
+- **Ink (primary text)**: `#17151F` — deep charcoal-black for headlines and body text.
+- **Primary accent (brand color)**: `#5B4EE5` — a flat periwinkle-violet for navigation, primary buttons, and interactive links.
+- **Secondary accent (compatibility score, highlights)**: `#FF6B4A` — a warm coral, used sparingly for score numbers and key highlights only.
+- **Trust/verified accent**: `#2F7A56` — a moss green, used only for verification and safety-related badges/icons.
 
 ---
 
-## 3. Implementation Roadmap
-1. [ ] Apply updated fonts, ambient colors, and glassmorphic utilities in `src/app/globals.css`.
-2. [ ] Redesign `src/components/Navbar.js` into a floating glassmorphic pill navbar.
-3. [ ] Upgrade `src/components/MatchCard.js` with glowing compatibility rings and sleek comparison tables.
-4. [ ] Polish Landing Page (`src/app/page.js`) and Dashboard (`src/app/dashboard/page.js`) layouts.
-5. [ ] Perform visual QA across mobile and desktop breakpoints.
+## 3. Typography Hierarchy
+- **Display Face (Headlines, Hero Text)**: **Fraunces** (Google Fonts, serif), set at high weight (600–700). Confident, warm editorial serif with real character that carries the personality of the page (48–64px on desktop hero).
+- **Body / UI Face**: **Inter** for all body text, form labels, nav, and buttons. Clean, highly legible, stays out of the way of the serif headlines.
+- **Data / Utility Face**: **IBM Plex Mono** for compatibility scores, numeric badges, and step numerals (`01`, `02`, `03`). Gives measured values a distinct, precise feel.
+
+---
+
+## 4. Signature Element: The 6-Axis Compatibility Fingerprint
+The product's core mechanism is a 6-axis compatibility score:
+1. Sleep schedule
+2. Cleanliness
+3. Food habits
+4. Guest frequency
+5. Smoking
+6. Move-in timing
+
+### Visual Implementations:
+- **Logo Mark (Navigation)**: A simplified static 6-point radial/asterisk mark in `#5B4EE5` on the left of the navbar.
+- **MatchCard Score Visualization**: Replaces plain percentage badges/rings with two overlapping radial 6-axis shapes in primary (`#5B4EE5`) and secondary (`#FF6B4A`) accents, with the overlap area shaded to show compatibility at a glance.
+- **Hero Watermark**: A single large, faint instance of the fingerprint mark behind the hero headline (low opacity, single flat `#5B4EE5` tint, no glow or blur).
+
+---
+
+## 5. Layout & Content Principles
+- **Hero Section**:
+  - Headline in serif **Fraunces**: *"Find a roommate you'll actually get along with"*
+  - Supporting sentence in **Inter**: *"We check your college email, match your sleep schedule and living habits, and keep your contact info private until you both say yes."*
+  - Single primary CTA button: *"Get started"* (flat `#5B4EE5` background, white text).
+  - Secondary text link: *"Sign in"* (not a second competing button).
+- **How It Works Section**:
+  - Set on `#F1EFFC` secondary background.
+  - Numbered steps using plain numerals (`01`, `02`, `03`) in **IBM Plex Mono**.
+- **Trust Section**:
+  - Explains email verification and mutual-interest contact reveal in plain language without jargon or specification references.
+- **Section Separation**:
+  - Uses generous whitespace and `#F1EFFC` alternating backgrounds instead of accent lines under headings, vertical color stripes, or gradient bars.

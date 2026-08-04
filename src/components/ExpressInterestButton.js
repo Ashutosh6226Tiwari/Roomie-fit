@@ -2,14 +2,6 @@
 
 import { useState } from "react";
 
-/**
- * ==============================================================================
- * RoomieMatch ExpressInterestButton (PRD §3.5 & §3.6)
- * ==============================================================================
- *
- * Client component for expressing mutual interest via POST /api/interests.
- * Displays distinctive success badges for directional interest vs mutual match.
- */
 export default function ExpressInterestButton({
   candidate,
   initialExpressed = false,
@@ -65,10 +57,10 @@ export default function ExpressInterestButton({
       <button
         type="button"
         disabled
-        className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-amber-400/60 bg-gradient-to-r from-amber-500/20 via-emerald-500/20 to-teal-500/20 px-5 py-3 text-sm font-extrabold text-amber-300 shadow-lg shadow-amber-500/10 cursor-default"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#2F7A56]/30 bg-[#2F7A56]/10 px-5 py-2.5 text-sm font-semibold text-[#2F7A56] cursor-default"
       >
-        <span className="h-2.5 w-2.5 rounded-full bg-amber-400 animate-ping" />
-        <span>🎉 Mutual Match! (Contact Unlocked)</span>
+        <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
+        <span>Mutual match — contact info unlocked</span>
       </button>
     );
   }
@@ -78,10 +70,10 @@ export default function ExpressInterestButton({
       <button
         type="button"
         disabled
-        className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-500/40 bg-emerald-500/20 px-5 py-3 text-sm font-bold text-emerald-300 transition-all cursor-default"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#2F7A56]/30 bg-[#2F7A56]/10 px-5 py-2.5 text-sm font-semibold text-[#2F7A56] cursor-default"
       >
-        <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span>✓ Interest Sent</span>
+        <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
+        <span>Interest sent</span>
       </button>
     );
   }
@@ -92,9 +84,8 @@ export default function ExpressInterestButton({
         type="button"
         disabled={status === "loading"}
         onClick={handleClick}
-        className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-[1.02] hover:shadow-indigo-500/40 active:scale-[0.98] disabled:opacity-75"
+        className="btn-primary-flat inline-flex w-full items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold shadow-sm disabled:opacity-75"
       >
-        <span className="absolute inset-0 bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         {status === "loading" ? (
           <span className="flex items-center gap-2">
             <svg
@@ -116,21 +107,16 @@ export default function ExpressInterestButton({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            <span>Expressing Interest...</span>
+            <span>Expressing interest...</span>
           </span>
         ) : (
-          <>
-            <span>👋 I&apos;m Interested!</span>
-            <span className="transition-transform duration-300 group-hover:translate-x-1">
-              →
-            </span>
-          </>
+          <span>Express interest</span>
         )}
       </button>
 
       {status === "error" && errorMessage && (
-        <p className="text-center text-xs text-red-300 font-medium">
-          ❌ {errorMessage}
+        <p className="text-center text-xs text-[#FF6B4A] font-medium">
+          {errorMessage}
         </p>
       )}
     </div>

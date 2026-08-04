@@ -159,34 +159,34 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
   };
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-indigo-950/80 p-6 md:p-8 backdrop-blur-xl shadow-2xl space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+    <div className="card-clean rounded-2xl p-6 md:p-8 bg-[#FFFFFF] space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E1F2] pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-300 mb-2">
-            Search &amp; Availability Controls
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#D8D5EC] bg-[#F1EFFC] px-3 py-1 text-xs font-semibold text-[#5B4EE5] mb-2">
+            Search &amp; availability controls
           </div>
-          <h2 className="text-xl font-bold text-white">Roommate Search Status</h2>
-          <p className="text-sm text-slate-300">
-            Control your visibility in AI matching and record your roommate success.
+          <h2 className="text-xl font-bold text-[#17151F]">Roommate search status</h2>
+          <p className="text-sm text-[#17151F]/70">
+            Control your visibility in matching and record your roommate success.
           </p>
         </div>
 
         {/* Status indicator pill */}
         <div>
           {foundRoommate ? (
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              Roommate Found 🎉
+            <span className="inline-flex items-center gap-2 rounded-full badge-trust px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2F7A56]">
+              <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
+              Roommate found 🎉
             </span>
           ) : activelyLooking ? (
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              Actively Looking
+            <span className="inline-flex items-center gap-2 rounded-full badge-trust px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2F7A56]">
+              <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
+              Actively looking
             </span>
           ) : (
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-600 bg-slate-800/80 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-300">
-              <span className="h-2 w-2 rounded-full bg-slate-500" />
-              Paused / Inactive
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#D8D5EC] bg-[#F1EFFC] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#17151F]/70">
+              <span className="h-2 w-2 rounded-full bg-[#17151F]/40" />
+              Paused / inactive
             </span>
           )}
         </div>

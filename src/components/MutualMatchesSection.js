@@ -3,15 +3,6 @@
 import { useState, useEffect } from "react";
 import ReportModalButton from "./ReportModalButton";
 
-/**
- * ==============================================================================
- * RoomieMatch MutualMatchesSection Client Component (PRD §3.6 & §4)
- * ==============================================================================
- *
- * Displays confirmed mutual roommate matches.
- * PER PRD §4 SERVER-ENFORCED CONTACT REVEAL:
- * This view is the ONLY place where contact information (email/phone) is rendered.
- */
 export default function MutualMatchesSection() {
   const [matches, setMatches] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,100 +35,82 @@ export default function MutualMatchesSection() {
     fetchMutualMatches();
   }, []);
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-baseline justify-between gap-4 border-b border-white/10 pb-4">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
-            <span className="h-2 w-2 rounded-full bg-amber-400" />
-            <span>Unlocked Contact Information</span>
-          </div>
-          <h2 className="mt-2 text-2xl font-extrabold text-white flex items-center gap-2">
-            <span>🤝 My Mutual Roommate Matches</span>
-            {matches && (
-              <span className="rounded-full bg-emerald-500/20 px-3 py-0.5 text-xs font-semibold text-emerald-300 border border-emerald-500/30">
-                {matches.length} {matches.length === 1 ? "match" : "matches"}
-              </span>
-            )}
-          </h2>
-          <p className="mt-1 text-sm text-slate-400">
-            Confirmed mutual matches where both students clicked &ldquo;I&apos;m
-            interested.&rdquo; Contact details are unlocked below.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={fetchMutualMatches}
-          disabled={loading}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-300 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
-        >
-          <span>🔄 Refresh Mutuals</span>
-        </button>
-      </div>
-
-      {loading && (
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-[#17151F]">Mutual matches</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {[1, 2].map((i) => (
             <div
               key={i}
-              className="h-56 rounded-3xl border border-slate-800 bg-slate-900/40 p-6 animate-pulse space-y-4"
-            >
-              <div className="h-6 w-48 rounded bg-slate-800" />
-              <div className="h-20 rounded-2xl bg-slate-800/60" />
-              <div className="h-10 rounded-xl bg-slate-800/40" />
-            </div>
+              className="h-56 rounded-2xl border border-[#E4E1F2] bg-[#F1EFFC] p-6 animate-pulse"
+            />
           ))}
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {error && (
-        <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
-          ❌ {error}
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-4 text-sm text-[#FF6B4A]">
+        {error}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-[#17151F]">Mutual matches</h2>
+          <p className="text-sm text-[#17151F]/70">
+            Peers who have also expressed interest in living with you.
+          </p>
         </div>
-      )}
+      </div>
 
-      {!loading && matches && matches.length === 0 && (
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-10 text-center backdrop-blur-xl space-y-3">
-          <div className="text-4xl">🔒</div>
-          <h3 className="text-lg font-bold text-white">
-            No Mutual Matches Yet
+      {matches && matches.length === 0 && (
+        <div className="card-clean rounded-2xl border border-[#E4E1F2] bg-[#FFFFFF] p-8 text-center space-y-2">
+          <h3 className="text-base font-bold text-[#17151F]">
+            No mutual matches yet
           </h3>
-          <p className="mx-auto max-w-md text-sm text-slate-400">
-            When you and another student both click{" "}
-            <strong className="text-slate-300">&ldquo;👋 I&apos;m Interested!&rdquo;</strong>{" "}
-            on each other&apos;s candidate cards, your verified contact
-            information will unlock here automatically!
+          <p className="mx-auto max-w-md text-sm text-[#17151F]/70">
+            When you and another student both select{" "}
+            <strong className="text-[#17151F] font-semibold">
+              Express interest
+            </strong>{" "}
+            on each other&apos;s cards, contact information will unlock here.
           </p>
         </div>
       )}
 
-      {!loading && matches && matches.length > 0 && (
+      {matches && matches.length > 0 && (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {matches.map((cand) => (
             <div
               key={cand.id || cand.user_id}
-              className="relative overflow-hidden rounded-3xl border-2 border-amber-500/40 bg-gradient-to-b from-slate-900 via-slate-900/90 to-amber-950/20 p-6 shadow-xl shadow-amber-500/5 transition-all hover:border-amber-500/60"
+              className="card-clean rounded-2xl border border-[#2F7A56]/30 bg-[#FFFFFF] p-6 space-y-4"
             >
               {/* Top Bar: Name, Score badge, City */}
-              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+              <div className="flex items-start justify-between gap-4 border-b border-[#E4E1F2] pb-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-extrabold text-white">
+                    <h3 className="text-lg font-bold text-[#17151F]">
                       {cand.full_name}
                     </h3>
-                    <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-extrabold text-emerald-300 border border-emerald-500/30">
-                      {cand.compatibilityScore || 100}% Match
+                    <span className="rounded-full badge-trust px-2.5 py-0.5 text-xs font-semibold">
+                      {cand.compatibilityScore || 100}% match
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-xs text-[#17151F]/70">
                     📍 {cand.city} • Budget: ${cand.budget_min}–${cand.budget_max}/mo
                   </p>
                 </div>
 
                 <div className="flex flex-col items-end gap-2 text-right">
-                  <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-500/10 px-2 py-1 rounded-full border border-amber-500/20">
-                    🎉 Contact Unlocked
+                  <span className="text-[10px] uppercase font-bold text-[#2F7A56] bg-[#2F7A56]/10 px-2.5 py-1 rounded-full border border-[#2F7A56]/20">
+                    Contact unlocked
                   </span>
                   <ReportModalButton
                     candidateId={cand.user_id}
@@ -146,27 +119,30 @@ export default function MutualMatchesSection() {
                 </div>
               </div>
 
-              {/* UNLOCKED CONTACT DETAILS BOX (§3.6 & §4) */}
-              <div className="my-4 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-3">
+              {/* UNLOCKED CONTACT DETAILS BOX */}
+              <div className="rounded-xl border border-[#2F7A56]/25 bg-[#2F7A56]/5 p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                    Verified Contact Info
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#2F7A56]">
+                    Verified contact info
                   </span>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-[#17151F]/60">
                     Matched:{" "}
-                    {new Date(cand.matchedAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {new Date(cand.matchedAt || Date.now()).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
                   </span>
                 </div>
 
-                <div className="space-y-2 text-sm">
+                <div className="space-y-1.5 text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="text-slate-400">📧 Email:</span>
+                    <span className="text-[#17151F]/60">Email:</span>
                     <a
                       href={`mailto:${cand.email}`}
-                      className="font-bold text-white underline decoration-amber-400 underline-offset-4 hover:text-amber-300"
+                      className="font-semibold text-[#5B4EE5] hover:underline"
                     >
                       {cand.email}
                     </a>
@@ -174,17 +150,17 @@ export default function MutualMatchesSection() {
 
                   {cand.phone ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-slate-400">📱 Phone:</span>
+                      <span className="text-[#17151F]/60">Phone:</span>
                       <a
                         href={`tel:${cand.phone}`}
-                        className="font-semibold text-white hover:text-amber-300"
+                        className="font-semibold text-[#17151F] hover:text-[#5B4EE5]"
                       >
                         {cand.phone}
                       </a>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <span>📱 Phone:</span>
+                    <div className="flex items-center gap-2 text-[#17151F]/60">
+                      <span>Phone:</span>
                       <span className="italic">Not provided in profile</span>
                     </div>
                   )}
@@ -192,25 +168,25 @@ export default function MutualMatchesSection() {
               </div>
 
               {/* Quick lifestyle highlights */}
-              <div className="flex flex-wrap gap-2 text-xs text-slate-300 pt-2 border-t border-white/5">
-                <span className="rounded-lg bg-black/30 px-2.5 py-1">
-                  🌙 {cand.sleep_schedule?.replace("_", " ")}
+              <div className="flex flex-wrap gap-2 text-xs text-[#17151F]/75 pt-2">
+                <span className="rounded-lg bg-[#F1EFFC] px-2.5 py-1">
+                  Sleep: {cand.sleep_schedule?.replace("_", " ")}
                 </span>
-                <span className="rounded-lg bg-black/30 px-2.5 py-1">
-                  ✨ Cleanliness: {cand.cleanliness_level}/5
+                <span className="rounded-lg bg-[#F1EFFC] px-2.5 py-1">
+                  Cleanliness: {cand.cleanliness_level}/5
                 </span>
-                <span className="rounded-lg bg-black/30 px-2.5 py-1">
-                  👥 Guests: {cand.guest_frequency}
+                <span className="rounded-lg bg-[#F1EFFC] px-2.5 py-1">
+                  Guests: {cand.guest_frequency}
                 </span>
               </div>
 
-              {/* Email Button */}
-              <div className="mt-5">
+              {/* Email CTA */}
+              <div className="pt-2">
                 <a
-                  href={`mailto:${cand.email}?subject=RoomieMatch: Let's room together in ${cand.city}!`}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-600 px-4 py-3 text-sm font-extrabold text-white shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.01] hover:from-amber-600 hover:to-emerald-700"
+                  href={`mailto:${cand.email}?subject=RoomieMatch: Let's connect about rooming in ${cand.city}`}
+                  className="btn-primary-flat inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold shadow-sm"
                 >
-                  <span>✉️ Email {cand.full_name.split(" ")[0]} Now →</span>
+                  <span>Email {cand.full_name.split(" ")[0]}</span>
                 </a>
               </div>
             </div>

@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-client";
+import { FingerprintLogo } from "@/components/CompatibilityFingerprint";
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [domainStatus, setDomainStatus] = useState(null); // { isCollegeDomain, domain, allowedDomains }
+  const [domainStatus, setDomainStatus] = useState(null);
   const [idFile, setIdFile] = useState(null);
   const [idFilePreview, setIdFilePreview] = useState(null);
   const [error, setError] = useState("");
@@ -17,7 +18,6 @@ export default function SignUpPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  // Check domain whenever valid email changes
   useEffect(() => {
     if (!email || !email.includes("@")) {
       return;
@@ -85,10 +85,10 @@ export default function SignUpPage() {
         return;
       }
 
-      // Allow any valid email (including gmail, non-college) per user request
+      // Allow any valid email per user request
       const isCollegeDomain = true;
 
-      // 1. Create account via server signup API (auto-confirm email for MVP simplicity)
+      // 1. Create account via server signup API
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -126,7 +126,6 @@ export default function SignUpPage() {
 
       const userId = signInData.user?.id;
 
-      // 3. If non-college domain, upload Student ID image to Supabase Storage bucket 'student-ids'
       if (!isCollegeDomain && idFile && userId) {
         const fileExt = idFile.name.split(".").pop() || "jpg";
         const filePath = `${userId}/id_card.${fileExt}`;
@@ -154,22 +153,22 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-6 py-12">
-      <div className="w-full max-w-md space-y-8 rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300">
-            Create Your Account
+    <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-[#FFFFFF] px-6 py-12">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-[#E4E1F2] bg-[#FFFFFF] p-8 shadow-sm">
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <FingerprintLogo className="h-9 w-9" color="#5B4EE5" />
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            Join RoomieMatch
+          <h1 className="font-serif-display text-3xl font-bold tracking-tight text-[#17151F]">
+            Create your account
           </h1>
-          <p className="text-sm text-slate-400">
-            Connect with verified college roommates who share your lifestyle.
+          <p className="text-sm text-[#17151F]/70">
+            Connect with verified peers who share your routine and living habits.
           </p>
         </div>
 
         {error && (
-          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
+          <div className="rounded-lg border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-3.5 text-xs text-[#FF6B4A]">
             {error}
           </div>
         )}
@@ -179,7 +178,7 @@ export default function SignUpPage() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10 hover:border-white/25 disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm font-semibold text-[#17151F] transition-colors hover:bg-[#F1EFFC] disabled:opacity-50"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path
@@ -203,17 +202,17 @@ export default function SignUpPage() {
         </button>
 
         <div className="relative flex items-center justify-center">
-          <div className="w-full border-t border-white/10" />
-          <span className="absolute bg-slate-900 px-3 text-xs uppercase tracking-wider text-slate-500">
+          <div className="w-full border-t border-[#E4E1F2]" />
+          <span className="absolute bg-[#FFFFFF] px-3 text-xs uppercase tracking-wider text-[#17151F]/40">
             or sign up with email
           </span>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Full Name
+            <label className="block text-xs font-semibold text-[#17151F]">
+              Full name
             </label>
             <input
               type="text"
@@ -221,14 +220,14 @@ export default function SignUpPage() {
               placeholder="e.g. Alex Rivera"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
             />
           </div>
 
           {/* Email Address */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Email Address
+            <label className="block text-xs font-semibold text-[#17151F]">
+              Email address
             </label>
             <input
               type="email"
@@ -236,17 +235,15 @@ export default function SignUpPage() {
               placeholder="e.g. alex@gmail.com or alex@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
             />
 
-            {/* Domain check visual feedback */}
             {activeDomainStatus && (
               <div className="mt-2">
-                <div className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                <div className="flex items-center gap-2 rounded-lg badge-trust px-3 py-2 text-xs font-semibold">
+                  <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
                   <span>
-                    Valid email address (
-                    <strong>@{activeDomainStatus.domain}</strong>). Community
+                    Valid email address (@{activeDomainStatus.domain}). Community
                     matching enabled!
                   </span>
                 </div>
@@ -256,7 +253,7 @@ export default function SignUpPage() {
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+            <label className="block text-xs font-semibold text-[#17151F]">
               Password
             </label>
             <input
@@ -266,71 +263,47 @@ export default function SignUpPage() {
               placeholder="Min. 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
+              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
             />
           </div>
 
-          {/* CONDITIONAL: Student ID Upload step if non-college domain */}
           {activeDomainStatus && !activeDomainStatus.isCollegeDomain && (
-            <div className="space-y-2 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 animate-fadeIn">
-              <label className="block text-xs font-bold uppercase tracking-wider text-amber-300">
-                Upload Student ID Photo (Required)
+            <div className="space-y-2 rounded-xl border border-[#E4E1F2] bg-[#F1EFFC] p-4">
+              <label className="block text-xs font-bold text-[#17151F]">
+                Upload Student ID Photo (Optional)
               </label>
-              <p className="text-xs text-slate-400">
-                Your uploaded ID will be stored in our secure private bucket for
-                manual review by our team.
-              </p>
-              <div className="relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-white/20 bg-slate-900/40 p-6 text-center hover:border-indigo-500/50 transition-colors">
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/jpg"
-                  onChange={handleFileChange}
-                  className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
-                />
-                {idFilePreview ? (
-                  <div className="flex flex-col items-center gap-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={idFilePreview}
-                      alt="Student ID Preview"
-                      className="h-24 w-auto rounded-lg object-cover border border-white/20"
-                    />
-                    <span className="text-xs font-medium text-emerald-400">
-                      {idFile?.name}
-                    </span>
-                    <span className="text-[10px] text-slate-400">
-                      Click or drag to replace
-                    </span>
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    <div className="text-sm font-medium text-slate-300">
-                      Click to upload or drag &amp; drop
-                    </div>
-                    <p className="text-xs text-slate-500">
-                      PNG, JPG, or WEBP (max 5MB)
-                    </p>
-                  </div>
-                )}
-              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full text-xs text-[#17151F]/70 file:mr-3 file:rounded-lg file:border-0 file:bg-[#5B4EE5] file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-[#4A3DD1]"
+              />
+              {idFilePreview && (
+                <div className="mt-2">
+                  <img
+                    src={idFilePreview}
+                    alt="ID Card preview"
+                    className="h-24 rounded-lg border border-[#E4E1F2] object-cover"
+                  />
+                </div>
+              )}
             </div>
           )}
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-600 hover:to-purple-700 hover:shadow-indigo-500/40 disabled:opacity-50"
+            className="w-full btn-primary-flat rounded-lg px-6 py-3 text-sm font-semibold shadow-sm disabled:opacity-50"
           >
-            {loading ? "Creating Account..." : "Create Account →"}
+            {loading ? "Creating account..." : "Get started"}
           </button>
         </form>
 
-        <p className="text-center text-xs text-slate-400">
+        <p className="text-center text-xs text-[#17151F]/70">
           Already have an account?{" "}
           <Link
             href="/sign-in"
-            className="font-semibold text-indigo-400 hover:text-indigo-300 underline underline-offset-4"
+            className="font-semibold text-[#5B4EE5] hover:underline"
           >
             Sign in
           </Link>

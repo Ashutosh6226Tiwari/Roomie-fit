@@ -2,14 +2,6 @@
 
 import { useState } from "react";
 
-/**
- * ==============================================================================
- * RoomieMatch ReportModalButton Client Component (PRD §7.3)
- * ==============================================================================
- *
- * Provides a "Report this profile" button and modal form on every profile/match
- * card, POSTing { reported_user_id, reason } to /api/reports.
- */
 export default function ReportModalButton({ candidateId, candidateName = "User" }) {
   const [isOpen, setIsOpen] = useState(false);
   const [reason, setReason] = useState("");
@@ -57,8 +49,8 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
 
   if (reported) {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800/60 px-2.5 py-1 text-xs font-semibold text-slate-400">
-        <span>✅ Reported for review</span>
+      <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#E4E1F2] bg-[#F1EFFC] px-2.5 py-1 text-xs font-semibold text-[#17151F]/60">
+        <span>✅ Reported</span>
       </span>
     );
   }
@@ -71,7 +63,7 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
           setIsOpen(true);
           setError(null);
         }}
-        className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+        className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#17151F]/60 hover:bg-[#F1EFFC] hover:text-[#17151F] transition-colors"
         title="Report this profile"
       >
         <span>🚩</span>
@@ -79,59 +71,59 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-[#E4E1F2] bg-[#FFFFFF] p-6 shadow-xl space-y-5">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300">
-                  <span>Trust &amp; Safety</span>
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-[#FF6B4A]/30 bg-[#FF6B4A]/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#FF6B4A]">
+                  <span>Safety</span>
                 </div>
-                <h3 className="text-lg font-extrabold text-white">
-                  Report Profile: {candidateName}
+                <h3 className="text-lg font-bold text-[#17151F]">
+                  Report profile: {candidateName}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-white/10 hover:text-white"
+                className="rounded-lg p-1 text-[#17151F]/50 hover:bg-[#F1EFFC] hover:text-[#17151F]"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-300">
-              Help us maintain a secure student community. All reports are confidential
-              and investigated by our moderation team.
+            <p className="text-xs text-[#17151F]/70">
+              Help us maintain a safe community. All reports are confidential
+              and reviewed by our moderation team.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
                   htmlFor="report-reason"
-                  className="block text-xs font-bold text-slate-200 mb-1"
+                  className="block text-xs font-semibold text-[#17151F] mb-1"
                 >
-                  Reason for Report
+                  Reason for report
                 </label>
                 <textarea
                   id="report-reason"
                   rows={4}
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  placeholder="e.g. Suspicious account, inappropriate bio, spam, harassment, or not a college student..."
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+                  placeholder="e.g. Suspicious account, spam, harassment, or inappropriate bio..."
+                  className="w-full rounded-xl border border-[#E4E1F2] bg-[#FFFFFF] px-3.5 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
                   maxLength={500}
                   required
                 />
                 <div className="mt-1 flex justify-end">
-                  <span className="text-[10px] text-slate-500">
+                  <span className="text-[10px] text-[#17151F]/50">
                     {reason.length}/500
                   </span>
                 </div>
               </div>
 
               {error && (
-                <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-2.5 text-xs text-red-300">
-                  ❌ {error}
+                <div className="rounded-lg border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-2.5 text-xs text-[#FF6B4A]">
+                  {error}
                 </div>
               )}
 
@@ -140,14 +132,14 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
                   type="button"
                   onClick={() => setIsOpen(false)}
                   disabled={loading}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-white/10 hover:text-white"
+                  className="rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2 text-xs font-semibold text-[#17151F]/70 hover:bg-[#F1EFFC] hover:text-[#17151F]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || !reason.trim()}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-2 text-xs font-bold text-white shadow-lg shadow-red-500/25 hover:from-red-500 hover:to-rose-500 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#FF6B4A] px-5 py-2 text-xs font-bold text-white shadow-sm hover:opacity-90 disabled:opacity-50"
                 >
                   {loading ? (
                     <>
@@ -155,7 +147,7 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
                       <span>Submitting...</span>
                     </>
                   ) : (
-                    <span>Submit Report</span>
+                    <span>Submit report</span>
                   )}
                 </button>
               </div>
