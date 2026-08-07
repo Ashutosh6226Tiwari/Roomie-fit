@@ -1,19 +1,66 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 export default function ScrollRevealedVideo({
   src,
   poster,
   scrimOpacity = "0.7",
   className = "",
-  dimmed = false,
+  videoOpacity = 1,
 }) {
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+
+  // Refs for race-condition guards and debouncing
+  const hasLoadedRef = useRef(false);
+  const playPromiseRef = useRef(null);
+  const debounceTimeoutRef = useRef(null);
+
+  // 1. Guard first play attempt on data readiness
+  const handleLoadedData = useCallback(() => {
+    hasLoadedRef.current = true;
+    if (isVisible && !reduceMotion) {
+      safePlay();
+    }
+  }, [isVisible, reduceMotion]);
+
+  // 2. Safe play handling (treat as Promise)
+  const safePlay = async () => {
+    if (!videoRef.current || reduceMotion) return;
+    try {
+      const p = videoRef.current.play();
+      playPromiseRef.current = p;
+      if (p !== undefined) {
+        await p;
+      }
+    } catch (err) {
+      // Ignore AbortError / NotAllowedError
+      // Don't throw or break state
+    }
+  };
+
+  // 2. Safe pause handling (wait for pending play promise)
+  const safePause = async () => {
+    if (!videoRef.current || reduceMotion) return;
+    
+    // 5. State guard: wait for any in-flight play() promise to settle first
+    if (playPromiseRef.current !== undefined && playPromiseRef.current !== null) {
+      try {
+        await playPromiseRef.current;
+      } catch (err) {
+        // Ignore errors from the play promise
+      }
+    }
+    
+    // Once settled, safe to pause
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
 
   useEffect(() => {
     // Check prefers-reduced-motion
@@ -33,20 +80,29 @@ export default function ScrollRevealedVideo({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setShouldLoad(true); // Trigger lazy load
-            setIsVisible(true);
-            // Only play if we have a video ref and reduce motion is false
-            if (videoRef.current && !reduceMotion) {
-              // Catch DOMException on play (e.g., auto-play policies)
-              videoRef.current.play().catch((e) => console.log("Video play blocked:", e));
-            }
-          } else {
-            setIsVisible(false);
-            if (videoRef.current && !reduceMotion) {
-              videoRef.current.pause();
-            }
+          const isIntersecting = entry.isIntersecting;
+
+          // 3. Debounce the IntersectionObserver callback
+          if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
           }
+          
+          debounceTimeoutRef.current = setTimeout(() => {
+            if (isIntersecting) {
+              setShouldLoad(true); // Trigger lazy load
+              setIsVisible(true);
+              
+              // Only attempt play if data has loaded
+              if (hasLoadedRef.current && !reduceMotion) {
+                safePlay();
+              }
+            } else {
+              setIsVisible(false);
+              if (!reduceMotion) {
+                safePause();
+              }
+            }
+          }, 150);
         });
       },
       {
@@ -59,6 +115,9 @@ export default function ScrollRevealedVideo({
 
     return () => {
       observer.disconnect();
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
     };
   }, [reduceMotion]);
 
@@ -75,11 +134,13 @@ export default function ScrollRevealedVideo({
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
-          style={{ opacity: isVisible ? (dimmed ? 0.25 : 1) : 0 }}
-          muted
+          style={{ opacity: isVisible ? videoOpacity : 0 }}
+          muted={true}
           loop
           playsInline
+          preload="auto"
           poster={poster}
+          onLoadedData={handleLoadedData}
         >
           {!reduceMotion && <source src={src} type="video/mp4" />}
         </video>
@@ -87,7 +148,7 @@ export default function ScrollRevealedVideo({
       {!shouldLoad && (
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000"
-          style={{ backgroundImage: `url(${poster})`, opacity: isVisible ? (dimmed ? 0.25 : 1) : 0 }}
+          style={{ backgroundImage: `url(${poster})`, opacity: isVisible ? videoOpacity : 0 }}
         />
       )}
       

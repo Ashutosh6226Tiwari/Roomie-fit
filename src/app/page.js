@@ -138,10 +138,11 @@ export default function Home() {
           <ScrollRevealedVideo 
             src="/videos/trust-loop.mp4" 
             poster="/videos/trust-poster.jpg" 
+            scrimOpacity="0.55"
           />
 
           <div className="mx-auto max-w-4xl space-y-14 relative z-30">
-            <div className="text-center max-w-2xl mx-auto space-y-4">
+            <div className="text-center max-w-2xl mx-auto space-y-4 bg-black/40 p-8 rounded-3xl backdrop-blur-md border border-white/10 shadow-xl">
               <h2 className="font-serif-display text-3xl sm:text-5xl font-bold text-white drop-shadow-lg">
                 Built for trust on campus
               </h2>
@@ -152,7 +153,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 space-y-3 shadow-2xl">
+              <div className="bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 space-y-3 shadow-2xl">
                 <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#4ade80]">
                   <span>✓</span>
                   <span>We check your college email</span>
@@ -167,7 +168,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 space-y-3 shadow-2xl">
+              <div className="bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 space-y-3 shadow-2xl">
                 <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#818cf8]">
                   <span>🔒</span>
                   <span>Contact info stays private until you both say yes</span>
@@ -192,10 +193,11 @@ export default function Home() {
           <ScrollRevealedVideo 
             src="/videos/hero-loop.mp4" 
             poster="/videos/hero-poster.jpg"
-            dimmed={true} 
+            videoOpacity={0.45}
+            scrimOpacity="0.45"
           />
           
-          <div className="relative z-30 text-center space-y-8 max-w-2xl mx-auto bg-black/30 p-10 rounded-3xl backdrop-blur-sm border border-white/10">
+          <div className="relative z-30 text-center space-y-8 max-w-2xl mx-auto bg-black/40 p-10 rounded-3xl backdrop-blur-md border border-white/10 shadow-2xl">
             <h3 className="font-serif-display text-3xl sm:text-4xl font-bold text-white drop-shadow-lg">
               Ready to find a roommate who fits your routine?
             </h3>
