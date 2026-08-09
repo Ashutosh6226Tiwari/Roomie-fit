@@ -16,14 +16,6 @@ export default function Navbar() {
   const supabase = createClient();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // Check initial scroll position
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
     async function fetchUserAndProfile() {
       const {
         data: { user: currentUser },
@@ -66,8 +58,15 @@ export default function Navbar() {
       setLoading(false);
     });
 
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
     return () => {
       subscription?.unsubscribe();
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [supabase]);
 
@@ -95,20 +94,27 @@ export default function Navbar() {
 
   const isHome = pathname === "/";
 
+  const getNavClasses = () => {
+    if (isHome) {
+      if (isScrolled) {
+        return "fixed top-0 z-50 w-full transition-all duration-300 bg-[#0a0a0f]/95 border-b border-white/10 backdrop-blur-md shadow-lg";
+      } else {
+        return "fixed top-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-transparent";
+      }
+    }
+    return "sticky top-0 z-50 w-full transition-colors border-b border-[#E4E1F2] bg-[#FFFFFF]/95 backdrop-blur-md";
+  };
+
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-      isHome 
-        ? (isScrolled ? 'bg-[rgba(10,10,15,0.92)] backdrop-blur-md border-b border-white/10 shadow-lg' : 'bg-transparent border-b border-white/10') 
-        : 'border-b border-[#E4E1F2] bg-[#FFFFFF]/95 backdrop-blur-md'
-    }`}>
+    <header className={getNavClasses()}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         {/* Brand Logo with Signature 6-Axis Fingerprint Mark */}
         <Link
           href="/"
-          className={`flex items-center gap-2.5 text-lg font-bold tracking-tight hover:opacity-90 transition-opacity ${isHome ? 'text-white' : 'text-[#17151F]'}`}
+          className={"flex items-center gap-2.5 text-lg font-bold tracking-tight hover:opacity-90 transition-opacity " + (isHome ? "text-white" : "text-[#17151F]")}
         >
           <FingerprintLogo className="h-7 w-7" color={isHome ? "#FFFFFF" : "#5B4EE5"} />
-          <span className={`font-semibold ${isHome ? 'text-white' : 'text-[#17151F]'}`}>
+          <span className={"font-semibold " + (isHome ? "text-white" : "text-[#17151F]")}>
             RoomieMatch
           </span>
         </Link>
@@ -116,7 +122,7 @@ export default function Navbar() {
         {/* Navigation Links & User Actions */}
         <nav className="flex items-center gap-6">
           {loading ? (
-            <div className={`h-8 w-28 animate-pulse rounded-full ${isHome ? 'bg-white/10' : 'bg-[#F1EFFC]'}`} />
+            <div className={"h-8 w-28 animate-pulse rounded-full " + (isHome ? "bg-white/10" : "bg-[#F1EFFC]")} />
           ) : user ? (
             <div className="flex items-center gap-5">
               {/* Trust Moss Green Verified Status Pill */}
@@ -128,48 +134,51 @@ export default function Navbar() {
               {/* Nav Links */}
               <Link
                 href="/dashboard"
-                className={`text-sm font-semibold transition-colors ${
-                  pathname === "/dashboard"
+                className={
+                  "text-sm font-semibold transition-colors " +
+                  (pathname === "/dashboard"
                     ? "text-[#5B4EE5] underline underline-offset-4"
-                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]"
-                }`}
+                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]")
+                }
               >
                 Matches
               </Link>
 
               <Link
                 href="/onboarding"
-                className={`text-sm font-semibold transition-colors ${
-                  pathname?.startsWith("/onboarding")
+                className={
+                  "text-sm font-semibold transition-colors " +
+                  (pathname?.startsWith("/onboarding")
                     ? "text-[#5B4EE5] underline underline-offset-4"
-                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]"
-                }`}
+                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]")
+                }
               >
                 Preferences
               </Link>
 
               <Link
                 href="/dashboard/profile"
-                className={`text-sm font-semibold transition-colors ${
-                  pathname?.startsWith("/dashboard/profile")
+                className={
+                  "text-sm font-semibold transition-colors " +
+                  (pathname?.startsWith("/dashboard/profile")
                     ? "text-[#5B4EE5] underline underline-offset-4"
-                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]"
-                }`}
+                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]")
+                }
               >
                 My Profile
               </Link>
 
               {/* User Initials Avatar & Sign Out */}
-              <div className={`flex items-center gap-3 pl-3 border-l ${isHome ? 'border-white/20' : 'border-[#E4E1F2]'}`}>
+              <div className={"flex items-center gap-3 pl-3 border-l " + (isHome ? "border-white/20" : "border-[#E4E1F2]")}>
                 <div
                   title={profile?.full_name || user?.email}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold ${isHome ? 'bg-white/10 border-white/20 text-white' : 'bg-[#F1EFFC] border-[#D8D5EC] text-[#5B4EE5]'}`}
+                  className={"flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold " + (isHome ? "bg-white/10 border-white/20 text-white" : "bg-[#F1EFFC] border-[#D8D5EC] text-[#5B4EE5]")}
                 >
                   {getInitials(profile?.full_name, user?.email)}
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${isHome ? 'bg-white/10 border-white/20 text-white hover:bg-white/20' : 'border-[#E4E1F2] bg-[#FFFFFF] text-[#17151F]/80 hover:bg-[#F1EFFC] hover:text-[#17151F]'}`}
+                  className={"rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors " + (isHome ? "bg-white/10 border-white/20 text-white hover:bg-white/20" : "border-[#E4E1F2] bg-[#FFFFFF] text-[#17151F]/80 hover:bg-[#F1EFFC] hover:text-[#17151F]")}
                 >
                   Sign Out
                 </button>
@@ -179,7 +188,7 @@ export default function Navbar() {
             <div className="flex items-center gap-5">
               <Link
                 href="/sign-in"
-                className={`text-sm font-semibold transition-colors ${isHome ? 'text-white/80 hover:text-white' : 'text-[#17151F] hover:text-[#5B4EE5]'}`}
+                className={"text-sm font-semibold transition-colors " + (isHome ? "text-white/80 hover:text-white" : "text-[#17151F] hover:text-[#5B4EE5]")}
               >
                 Sign in
               </Link>

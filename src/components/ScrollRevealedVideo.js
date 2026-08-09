@@ -28,6 +28,13 @@ export default function ScrollRevealedVideo({
     }
   }, [isVisible, reduceMotion]);
 
+  // Check on mount if video is already loaded
+  useEffect(() => {
+    if (videoRef.current && videoRef.current.readyState >= 2) {
+      hasLoadedRef.current = true;
+    }
+  }, []);
+
   // 2. Safe play handling (treat as Promise)
   const safePlay = async () => {
     if (!videoRef.current || reduceMotion) return;
@@ -106,8 +113,8 @@ export default function ScrollRevealedVideo({
         });
       },
       {
-        threshold: 0.3,
-        rootMargin: "200px 0px", // Trigger loading slightly before scrolling into view
+        threshold: 0.1,
+        rootMargin: "100px 0px", // Trigger loading slightly before scrolling into view
       }
     );
 
