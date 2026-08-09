@@ -16,14 +16,10 @@ export default function Navbar() {
   const supabase = createClient();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
     // Check initial scroll position
     handleScroll();
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -98,18 +94,13 @@ export default function Navbar() {
   };
 
   const isHome = pathname === "/";
-  
-  // Determine header classes based on route and scroll state
-  const headerClasses = isHome
-    ? `sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-[#0a0a0f]/95 backdrop-blur-md border-b border-white/10 shadow-lg' 
-          : 'bg-transparent border-b border-transparent'
-      }`
-    : 'sticky top-0 z-50 w-full transition-colors border-b border-[#E4E1F2] bg-[#FFFFFF]/95 backdrop-blur-md';
 
   return (
-    <header className={headerClasses}>
+    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      isHome 
+        ? (isScrolled ? 'bg-[rgba(10,10,15,0.92)] backdrop-blur-md border-b border-white/10 shadow-lg' : 'bg-transparent border-b border-white/10') 
+        : 'border-b border-[#E4E1F2] bg-[#FFFFFF]/95 backdrop-blur-md'
+    }`}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         {/* Brand Logo with Signature 6-Axis Fingerprint Mark */}
         <Link
