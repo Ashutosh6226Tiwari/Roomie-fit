@@ -53,14 +53,14 @@ export default function FindRoommatesSection({ profile }) {
 
   if (!isProfileComplete) {
     return (
-      <div className="card-clean rounded-2xl border border-[#FF6B4A]/30 bg-[#FF6B4A]/5 p-8 text-center space-y-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#FF6B4A]">
+      <div className="card-clean rounded-2xl border border-destructive/30 bg-destructive/10 p-8 text-center space-y-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-destructive">
           <span>Profile setup required</span>
         </div>
-        <h2 className="text-xl font-bold text-[#17151F]">
+        <h2 className="text-xl font-bold text-foreground">
           Complete your profile to unlock matching
         </h2>
-        <p className="mx-auto max-w-lg text-sm text-[#17151F]/75">
+        <p className="mx-auto max-w-lg text-sm text-muted-foreground">
           To calculate your lifestyle compatibility and budget overlap, please
           finish setting up your city, budget range, and daily habits.
         </p>
@@ -79,15 +79,15 @@ export default function FindRoommatesSection({ profile }) {
   return (
     <div className="space-y-8">
       {/* Search Header / Trigger Bar */}
-      <div className="card-clean flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl p-6 bg-[#FFFFFF]">
+      <div className="card-clean flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl p-6 bg-card">
         <div>
-          <h2 className="text-xl font-bold text-[#17151F]">
+          <h2 className="text-xl font-bold text-foreground">
             Find my roommates
           </h2>
-          <p className="mt-1 text-sm text-[#17151F]/70">
+          <p className="mt-1 text-sm text-muted-foreground">
             Compatibility scoring scoped to{" "}
-            <strong className="text-[#17151F]">{profile.city}</strong> (Budget:{" "}
-            <span className="text-[#5B4EE5] font-semibold">
+            <strong className="text-foreground">{profile.city}</strong> (Budget:{" "}
+            <span className="text-primary font-semibold">
               ${profile.budget_min}–${profile.budget_max}
             </span>
             )
@@ -104,7 +104,7 @@ export default function FindRoommatesSection({ profile }) {
             {loading ? (
               <span className="flex items-center gap-2">
                 <svg
-                  className="h-4 w-4 animate-spin text-white"
+                  className="h-4 w-4 animate-spin text-foreground"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -135,12 +135,12 @@ export default function FindRoommatesSection({ profile }) {
 
       {/* Error State */}
       {error && (
-        <div className="rounded-xl border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-4 text-sm text-[#FF6B4A] flex items-center justify-between">
+        <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive flex items-center justify-between">
           <span>{error}</span>
           <button
             type="button"
             onClick={handleFindMatches}
-            className="rounded-lg bg-[#FF6B4A]/20 px-3 py-1 text-xs font-bold text-[#FF6B4A]"
+            className="rounded-lg bg-destructive/10 px-3 py-1 text-xs font-bold text-destructive"
           >
             Try again
           </button>
@@ -151,7 +151,7 @@ export default function FindRoommatesSection({ profile }) {
       {loading && (
         <div className="space-y-6">
           <div className="flex items-center justify-center py-4">
-            <div className="inline-flex items-center gap-3 rounded-full border border-[#D8D5EC] bg-[#F1EFFC] px-5 py-2 text-sm font-semibold text-[#5B4EE5]">
+            <div className="inline-flex items-center gap-3 rounded-full border border-border bg-secondary px-5 py-2 text-sm font-semibold text-primary">
               <span>
                 Calculating lifestyle scoring in {profile.city}...
               </span>
@@ -162,7 +162,7 @@ export default function FindRoommatesSection({ profile }) {
             {[1, 2, 3].map((skeletonIdx) => (
               <div
                 key={skeletonIdx}
-                className="h-96 rounded-2xl border border-[#E4E1F2] bg-[#F1EFFC] p-6 animate-pulse space-y-4"
+                className="h-96 rounded-2xl border border-border bg-secondary p-6 animate-pulse space-y-4"
               />
             ))}
           </div>
@@ -172,33 +172,33 @@ export default function FindRoommatesSection({ profile }) {
       {/* Results Section */}
       {!loading && matches && (
         <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row items-baseline justify-between gap-2 border-b border-[#E4E1F2] pb-4">
-            <h3 className="text-lg font-bold text-[#17151F] flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-baseline justify-between gap-2 border-b border-border pb-4">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
               <span>Top roommate candidates</span>
-              <span className="rounded-full bg-[#F1EFFC] px-2.5 py-0.5 text-xs font-semibold text-[#5B4EE5] border border-[#D8D5EC]">
+              <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-primary border border-border">
                 {matches.length} matches
               </span>
             </h3>
             {metadata && (
-              <p className="text-xs text-[#17151F]/60">
+              <p className="text-xs text-muted-foreground">
                 Filtered from{" "}
-                <strong className="text-[#17151F]">
+                <strong className="text-foreground">
                   {metadata.totalEligible}
                 </strong>{" "}
                 eligible candidates in{" "}
-                <strong className="text-[#17151F]">{profile.city}</strong>
+                <strong className="text-foreground">{profile.city}</strong>
               </p>
             )}
           </div>
 
           {matches.length === 0 ? (
-            <div className="card-clean rounded-2xl border border-[#E4E1F2] bg-[#FFFFFF] p-10 text-center space-y-3">
-              <h4 className="text-base font-bold text-[#17151F]">
+            <div className="card-clean rounded-2xl border border-border bg-card p-10 text-center space-y-3">
+              <h4 className="text-base font-bold text-foreground">
                 No compatible matches found
               </h4>
-              <p className="mx-auto max-w-md text-sm text-[#17151F]/70">
+              <p className="mx-auto max-w-md text-sm text-muted-foreground">
                 We couldn&apos;t find candidates in{" "}
-                <strong className="text-[#17151F]">{profile.city}</strong> whose
+                <strong className="text-foreground">{profile.city}</strong> whose
                 budget overlaps with your range ($
                 {profile.budget_min}–${profile.budget_max}) or preferences.
               </p>

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase-server";
+import { createClient, createAdminClient } from "@/lib/supabase-server";
 
 export async function GET(request) {
   const { searchParams, origin } = new URL(request.url);
@@ -8,8 +8,20 @@ export async function GET(request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      // [MVP OVERRIDE] We are temporarily bypassing domain verification.
+      const REQUIRE_DOMAIN_VERIFICATION = false;
+      
+      if (!REQUIRE_DOMAIN_VERIFICATION && data?.user) {
+        // Auto-verify OAuth users (trigger might have set them to student_id_pending)
+        const adminSupabase = createAdminClient();
+        await adminSupabase
+          .from("profiles")
+          .update({ is_verified: true, verification_method: "email_verified" })
+          .eq("user_id", data.user.id);
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
     console.error("OAuth exchangeCodeForSession error:", error);

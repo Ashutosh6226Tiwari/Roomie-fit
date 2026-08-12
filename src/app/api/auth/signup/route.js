@@ -18,9 +18,20 @@ export async function POST(request) {
     }
 
     const domain = email.split("@")[1]?.toLowerCase().trim();
-    // Per user request: allow any valid gmail or non-college email to enter and be verified
-    const isCollegeDomain = true;
-    const finalVerificationMethod = "email_verified";
+    const allowedDomains = (process.env.ALLOWED_COLLEGE_EMAIL_DOMAINS || "")
+      .split(",")
+      .map((d) => d.trim().toLowerCase());
+    
+    // [MVP OVERRIDE] Temporarily bypassing domain verification
+    const REQUIRE_DOMAIN_VERIFICATION = false;
+
+    const isCollegeDomain = REQUIRE_DOMAIN_VERIFICATION 
+      ? allowedDomains.includes(domain)
+      : true;
+      
+    const finalVerificationMethod = isCollegeDomain 
+      ? "college_email" 
+      : "student_id_pending";
 
     const adminSupabase = createAdminClient();
 

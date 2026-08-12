@@ -2,32 +2,32 @@
 @source "../components";
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #17151F;
+  --background: #0a0a0f;
+  --foreground: #f4f2ee;
 
   /* Shared shadcn / semantic UI theme variables per V3.0 design system */
-  --card: #FFFFFF;
-  --card-foreground: #17151F;
-  --popover: #FFFFFF;
-  --popover-foreground: #17151F;
+  --card: #121017;
+  --card-foreground: #f4f2ee;
+  --popover: #121017;
+  --popover-foreground: #f4f2ee;
   --primary: #5B4EE5;
   --primary-foreground: #FFFFFF;
-  --secondary: #F1EFFC;
-  --secondary-foreground: #17151F;
-  --muted: #F1EFFC;
-  --muted-foreground: #5E5A75;
-  --accent: #F1EFFC;
-  --accent-foreground: #17151F;
-  --destructive: #FF6B4A;
+  --secondary: #1f1b29;
+  --secondary-foreground: #9d9aae;
+  --muted: #1f1b29;
+  --muted-foreground: #9d9aae;
+  --accent: #7c9eff;
+  --accent-foreground: #0a0a0f;
+  --destructive: #ff8f5e;
   --destructive-foreground: #FFFFFF;
-  --border: #E4E1F2;
-  --input: #E4E1F2;
+  --border: rgba(244, 242, 238, 0.15);
+  --input: rgba(244, 242, 238, 0.15);
   --ring: #5B4EE5;
   --radius: 0.75rem;
 
-  --color-secondary-bg: #F1EFFC;
+  --color-secondary-bg: #1f1b29;
   --color-primary-accent: #5B4EE5;
-  --color-secondary-accent: #FF6B4A;
+  --color-secondary-accent: #ff8f5e;
   --color-trust-accent: #2F7A56;
 }
 

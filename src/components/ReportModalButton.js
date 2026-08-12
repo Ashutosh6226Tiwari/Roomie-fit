@@ -49,7 +49,7 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
 
   if (reported) {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#E4E1F2] bg-[#F1EFFC] px-2.5 py-1 text-xs font-semibold text-[#17151F]/60">
+      <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-2.5 py-1 text-xs font-semibold text-muted-foreground">
         <span>✅ Reported</span>
       </span>
     );
@@ -63,7 +63,7 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
           setIsOpen(true);
           setError(null);
         }}
-        className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#17151F]/60 hover:bg-[#F1EFFC] hover:text-[#17151F] transition-colors"
+        className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
         title="Report this profile"
       >
         <span>🚩</span>
@@ -72,26 +72,26 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-[#E4E1F2] bg-[#FFFFFF] p-6 shadow-xl space-y-5">
+          <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl space-y-5">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-[#FF6B4A]/30 bg-[#FF6B4A]/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#FF6B4A]">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-destructive/30 bg-destructive/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">
                   <span>Safety</span>
                 </div>
-                <h3 className="text-lg font-bold text-[#17151F]">
+                <h3 className="text-lg font-bold text-foreground">
                   Report profile: {candidateName}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-lg p-1 text-[#17151F]/50 hover:bg-[#F1EFFC] hover:text-[#17151F]"
+                className="rounded-lg p-1 text-muted-foreground hover:bg-secondary hover:text-foreground"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-[#17151F]/70">
+            <p className="text-xs text-muted-foreground">
               Help us maintain a safe community. All reports are confidential
               and reviewed by our moderation team.
             </p>
@@ -100,7 +100,7 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
               <div>
                 <label
                   htmlFor="report-reason"
-                  className="block text-xs font-semibold text-[#17151F] mb-1"
+                  className="block text-xs font-semibold text-foreground mb-1"
                 >
                   Reason for report
                 </label>
@@ -110,19 +110,19 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="e.g. Suspicious account, spam, harassment, or inappropriate bio..."
-                  className="w-full rounded-xl border border-[#E4E1F2] bg-[#FFFFFF] px-3.5 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
+                  className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-foreground placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
                   maxLength={500}
                   required
                 />
                 <div className="mt-1 flex justify-end">
-                  <span className="text-[10px] text-[#17151F]/50">
+                  <span className="text-[10px] text-muted-foreground">
                     {reason.length}/500
                   </span>
                 </div>
               </div>
 
               {error && (
-                <div className="rounded-lg border border-[#FF6B4A]/40 bg-[#FF6B4A]/10 p-2.5 text-xs text-[#FF6B4A]">
+                <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive">
                   {error}
                 </div>
               )}
@@ -132,14 +132,14 @@ export default function ReportModalButton({ candidateId, candidateName = "User" 
                   type="button"
                   onClick={() => setIsOpen(false)}
                   disabled={loading}
-                  className="rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2 text-xs font-semibold text-[#17151F]/70 hover:bg-[#F1EFFC] hover:text-[#17151F]"
+                  className="rounded-lg border border-border bg-card px-4 py-2 text-xs font-semibold text-muted-foreground hover:bg-secondary hover:text-foreground"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || !reason.trim()}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#FF6B4A] px-5 py-2 text-xs font-bold text-white shadow-sm hover:opacity-90 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-destructive px-5 py-2 text-xs font-bold text-foreground shadow-sm hover:opacity-90 disabled:opacity-50"
                 >
                   {loading ? (
                     <>

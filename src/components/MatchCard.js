@@ -104,10 +104,10 @@ export default function MatchCard({ match, requesterProfile, rank }) {
     .toUpperCase();
 
   return (
-    <div className="card-clean group relative flex flex-col overflow-hidden rounded-2xl p-6 bg-[#FFFFFF]">
+    <div className="card-clean group relative flex flex-col overflow-hidden rounded-2xl p-6 bg-card">
       {/* Top Rank Ribbon if Rank 1 */}
       {rank === 1 && (
-        <div className="absolute -right-10 top-5 rotate-45 bg-[#FF6B4A] px-10 py-1 text-center font-mono-data text-[10px] font-bold uppercase tracking-widest text-[#FFFFFF] shadow-sm">
+        <div className="absolute -right-10 top-5 rotate-45 bg-destructive px-10 py-1 text-center font-mono-data text-[10px] font-bold uppercase tracking-widest text-card-foreground shadow-sm">
           TOP MATCH
         </div>
       )}
@@ -119,24 +119,24 @@ export default function MatchCard({ match, requesterProfile, rank }) {
             <img
               src={candidate.photo_url}
               alt={candidate.full_name}
-              className="h-16 w-16 rounded-xl border border-[#E4E1F2] object-cover shadow-sm transition-transform duration-300 group-hover:scale-105"
+              className="h-16 w-16 rounded-xl border border-border object-cover shadow-sm transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-[#F1EFFC] border border-[#D8D5EC] text-xl font-bold text-[#5B4EE5] transition-transform duration-300 group-hover:scale-105">
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-secondary border border-border text-xl font-bold text-primary transition-transform duration-300 group-hover:scale-105">
               {initials}
             </div>
           )}
 
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xl font-bold text-[#17151F] tracking-tight">
+              <h3 className="text-xl font-bold text-foreground tracking-tight">
                 {candidate.full_name}
               </h3>
-              <span className="rounded-full border border-[#D8D5EC] bg-[#F1EFFC] px-2.5 py-0.5 font-mono-data text-xs font-semibold text-[#5B4EE5]">
+              <span className="rounded-full border border-border bg-secondary px-2.5 py-0.5 font-mono-data text-xs font-semibold text-primary">
                 Verified
               </span>
             </div>
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-[#17151F]/70">
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
               <span>📍</span> {candidate.city || "College City"}
             </p>
           </div>
@@ -152,23 +152,23 @@ export default function MatchCard({ match, requesterProfile, rank }) {
       </div>
 
       {/* AI Compatibility Analysis Card */}
-      <div className="mt-6 rounded-xl bg-[#F1EFFC] border border-[#D8D5EC] p-5">
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5B4EE5]">
+      <div className="mt-6 rounded-xl bg-secondary border border-border p-5">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
           <span>✨</span>
           <span>Compatibility Analysis</span>
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-[#17151F]/80">
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {fullSummary}
         </p>
       </div>
 
       {/* Side-by-Side Lifestyle Comparison Matrix */}
       <div className="mt-6">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-[#17151F]/60 mb-3">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
           Side-by-Side Lifestyle Comparison
         </h4>
-        <div className="overflow-hidden rounded-xl border border-[#E4E1F2] bg-[#FFFFFF]">
-          <div className="grid grid-cols-12 border-b border-[#E4E1F2] bg-[#F1EFFC] px-4 py-2.5 text-xs font-semibold text-[#17151F]/70">
+        <div className="overflow-hidden rounded-xl border border-border bg-card">
+          <div className="grid grid-cols-12 border-b border-border bg-secondary px-4 py-2.5 text-xs font-semibold text-muted-foreground">
             <div className="col-span-4">Attribute</div>
             <div className="col-span-4 text-center">You</div>
             <div className="col-span-4 text-right">Candidate</div>
@@ -178,20 +178,20 @@ export default function MatchCard({ match, requesterProfile, rank }) {
             {comparisonRows.map((row, idx) => (
               <div
                 key={idx}
-                className="grid grid-cols-12 items-center px-4 py-2.5 text-xs transition-colors hover:bg-[#F1EFFC]/50"
+                className="grid grid-cols-12 items-center px-4 py-2.5 text-xs transition-colors hover:bg-secondary/50"
               >
-                <div className="col-span-4 flex items-center gap-1.5 font-medium text-[#17151F]">
+                <div className="col-span-4 flex items-center gap-1.5 font-medium text-foreground">
                   <span
                     className={`h-1.5 w-1.5 rounded-full ${
-                      row.isMatch ? "bg-[#2F7A56]" : "bg-[#FF6B4A]"
+                      row.isMatch ? "bg-[#2F7A56]" : "bg-destructive"
                     }`}
                   />
                   <span>{row.label}</span>
                 </div>
-                <div className="col-span-4 text-center font-semibold text-[#5B4EE5]">
+                <div className="col-span-4 text-center font-semibold text-primary">
                   {row.you}
                 </div>
-                <div className="col-span-4 text-right font-semibold text-[#17151F]/85">
+                <div className="col-span-4 text-right font-semibold text-muted-foreground">
                   {row.them}
                 </div>
               </div>
@@ -206,12 +206,12 @@ export default function MatchCard({ match, requesterProfile, rank }) {
           <button
             type="button"
             onClick={() => setBioExpanded(!bioExpanded)}
-            className="flex items-center gap-1 text-xs font-semibold text-[#5B4EE5] hover:underline transition-colors"
+            className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline transition-colors"
           >
             <span>{bioExpanded ? "▾ Hide Bio" : "▸ Read Full Bio"}</span>
           </button>
           {bioExpanded && (
-            <div className="mt-2 rounded-lg border border-[#E4E1F2] bg-[#F1EFFC] p-3 text-xs italic text-[#17151F]/80">
+            <div className="mt-2 rounded-lg border border-border bg-secondary p-3 text-xs italic text-muted-foreground">
               &ldquo;{candidate.about_me}&rdquo;
             </div>
           )}

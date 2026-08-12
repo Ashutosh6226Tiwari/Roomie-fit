@@ -63,16 +63,16 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-[#FFFFFF] px-6 py-12">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-[#E4E1F2] bg-[#FFFFFF] p-8 shadow-sm">
+    <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-background px-6 py-12">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-border bg-card p-8 shadow-sm">
         <div className="text-center space-y-3">
           <div className="flex justify-center">
             <FingerprintLogo className="h-9 w-9" color="#5B4EE5" />
           </div>
-          <h1 className="font-serif-display text-3xl font-bold tracking-tight text-[#17151F]">
+          <h1 className="font-serif-display text-3xl font-bold tracking-tight text-foreground">
             Welcome back
           </h1>
-          <p className="text-sm text-[#17151F]/70">
+          <p className="text-sm text-muted-foreground">
             Sign in to access your verified profile and roommate matches.
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function SignInPage() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm font-semibold text-[#17151F] transition-colors hover:bg-[#F1EFFC] disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm font-semibold text-[#17151F] transition-colors hover:bg-gray-100 disabled:opacity-50"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path
@@ -112,15 +112,15 @@ export default function SignInPage() {
         </button>
 
         <div className="relative flex items-center justify-center">
-          <div className="w-full border-t border-[#E4E1F2]" />
-          <span className="absolute bg-[#FFFFFF] px-3 text-xs uppercase tracking-wider text-[#17151F]/40">
+          <div className="w-full border-t border-border" />
+          <span className="absolute bg-card px-3 text-xs uppercase tracking-wider text-muted-foreground">
             or sign in with email
           </span>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-[#17151F]">
+            <label className="block text-xs font-semibold text-foreground">
               Email address
             </label>
             <input
@@ -129,12 +129,12 @@ export default function SignInPage() {
               placeholder="e.g. alex@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
+              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-[#17151F]">
+            <label className="block text-xs font-semibold text-foreground">
               Password
             </label>
             <input
@@ -143,7 +143,7 @@ export default function SignInPage() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
+              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
             />
           </div>
 
@@ -156,7 +156,7 @@ export default function SignInPage() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-[#17151F]/70">
+        <p className="text-center text-xs text-muted-foreground">
           Don&apos;t have an account?{" "}
           <Link
             href="/sign-up"

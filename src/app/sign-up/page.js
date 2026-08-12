@@ -85,8 +85,12 @@ export default function SignUpPage() {
         return;
       }
 
-      // Allow any valid email per user request
-      const isCollegeDomain = true;
+      // [MVP OVERRIDE] We are temporarily bypassing domain verification.
+      const REQUIRE_DOMAIN_VERIFICATION = false;
+
+      const isCollegeDomain = REQUIRE_DOMAIN_VERIFICATION
+        ? activeDomainStatus?.isCollegeDomain || false
+        : true;
 
       // 1. Create account via server signup API
       const res = await fetch("/api/auth/signup", {
@@ -153,16 +157,16 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-[#FFFFFF] px-6 py-12">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-[#E4E1F2] bg-[#FFFFFF] p-8 shadow-sm">
+    <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-background px-6 py-12">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-border bg-card p-8 shadow-sm">
         <div className="text-center space-y-3">
           <div className="flex justify-center">
             <FingerprintLogo className="h-9 w-9" color="#5B4EE5" />
           </div>
-          <h1 className="font-serif-display text-3xl font-bold tracking-tight text-[#17151F]">
+          <h1 className="font-serif-display text-3xl font-bold tracking-tight text-foreground">
             Create your account
           </h1>
-          <p className="text-sm text-[#17151F]/70">
+          <p className="text-sm text-muted-foreground">
             Connect with verified peers who share your routine and living habits.
           </p>
         </div>
@@ -178,7 +182,7 @@ export default function SignUpPage() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm font-semibold text-[#17151F] transition-colors hover:bg-[#F1EFFC] disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm font-semibold text-[#17151F] transition-colors hover:bg-gray-100 disabled:opacity-50"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path
@@ -202,8 +206,8 @@ export default function SignUpPage() {
         </button>
 
         <div className="relative flex items-center justify-center">
-          <div className="w-full border-t border-[#E4E1F2]" />
-          <span className="absolute bg-[#FFFFFF] px-3 text-xs uppercase tracking-wider text-[#17151F]/40">
+          <div className="w-full border-t border-border" />
+          <span className="absolute bg-card px-3 text-xs uppercase tracking-wider text-muted-foreground">
             or sign up with email
           </span>
         </div>
@@ -211,7 +215,7 @@ export default function SignUpPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-[#17151F]">
+            <label className="block text-xs font-semibold text-foreground">
               Full name
             </label>
             <input
@@ -220,13 +224,13 @@ export default function SignUpPage() {
               placeholder="e.g. Alex Rivera"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
+              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
             />
           </div>
 
           {/* Email Address */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-[#17151F]">
+            <label className="block text-xs font-semibold text-foreground">
               Email address
             </label>
             <input
@@ -235,7 +239,7 @@ export default function SignUpPage() {
               placeholder="e.g. alex@gmail.com or alex@college.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
+              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
             />
 
             {activeDomainStatus && (
@@ -253,7 +257,7 @@ export default function SignUpPage() {
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-[#17151F]">
+            <label className="block text-xs font-semibold text-foreground">
               Password
             </label>
             <input
@@ -263,27 +267,27 @@ export default function SignUpPage() {
               placeholder="Min. 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-[#E4E1F2] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#17151F] placeholder-[#17151F]/40 focus:border-[#5B4EE5] focus:outline-none focus:ring-1 focus:ring-[#5B4EE5]"
+              className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
             />
           </div>
 
           {activeDomainStatus && !activeDomainStatus.isCollegeDomain && (
-            <div className="space-y-2 rounded-xl border border-[#E4E1F2] bg-[#F1EFFC] p-4">
-              <label className="block text-xs font-bold text-[#17151F]">
+            <div className="space-y-2 rounded-xl border border-border bg-secondary p-4">
+              <label className="block text-xs font-bold text-foreground">
                 Upload Student ID Photo (Optional)
               </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="w-full text-xs text-[#17151F]/70 file:mr-3 file:rounded-lg file:border-0 file:bg-[#5B4EE5] file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-[#4A3DD1]"
+                className="w-full text-xs text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-primary-foreground hover:file:opacity-90"
               />
               {idFilePreview && (
                 <div className="mt-2">
                   <img
                     src={idFilePreview}
                     alt="ID Card preview"
-                    className="h-24 rounded-lg border border-[#E4E1F2] object-cover"
+                    className="h-24 rounded-lg border border-border object-cover"
                   />
                 </div>
               )}
@@ -299,7 +303,7 @@ export default function SignUpPage() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-[#17151F]/70">
+        <p className="text-center text-xs text-muted-foreground">
           Already have an account?{" "}
           <Link
             href="/sign-in"

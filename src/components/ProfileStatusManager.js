@@ -159,14 +159,14 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
   };
 
   return (
-    <div className="card-clean rounded-2xl p-6 md:p-8 bg-[#FFFFFF] space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E1F2] pb-6">
+    <div className="card-clean rounded-2xl p-6 md:p-8 bg-card space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#D8D5EC] bg-[#F1EFFC] px-3 py-1 text-xs font-semibold text-[#5B4EE5] mb-2">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-semibold text-primary mb-2">
             Search &amp; availability controls
           </div>
-          <h2 className="text-xl font-bold text-[#17151F]">Roommate search status</h2>
-          <p className="text-sm text-[#17151F]/70">
+          <h2 className="text-xl font-bold text-foreground">Roommate search status</h2>
+          <p className="text-sm text-muted-foreground">
             Control your visibility in matching and record your roommate success.
           </p>
         </div>
@@ -184,7 +184,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
               Actively looking
             </span>
           ) : (
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#D8D5EC] bg-[#F1EFFC] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#17151F]/70">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-[#17151F]/40" />
               Paused / inactive
             </span>
@@ -207,12 +207,12 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
               ? "border-white/5 bg-black/20 opacity-60"
               : activelyLooking
               ? "border-emerald-500/30 bg-emerald-500/5"
-              : "border-white/10 bg-white/5"
+              : "border-white/10 bg-card/5"
           }`}
         >
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h3 className="text-base font-semibold text-white">Actively Looking</h3>
+              <h3 className="text-base font-semibold text-foreground">Actively Looking</h3>
               <p className="text-xs text-slate-400 mt-1">
                 {foundRoommate
                   ? "Disabled because you marked roommate found."
@@ -233,7 +233,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
               } ${loading || foundRoommate ? "cursor-not-allowed opacity-50" : ""}`}
             >
               <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                className={`inline-block h-6 w-6 transform rounded-full bg-card shadow ring-0 transition duration-200 ease-in-out ${
                   activelyLooking && !foundRoommate
                     ? "translate-x-5"
                     : "translate-x-0"
@@ -246,7 +246,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
         {/* Toggle 2: Found Roommate */}
         <div className="rounded-2xl border border-purple-500/30 bg-purple-500/5 p-5 flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-semibold text-white">
+            <h3 className="text-base font-semibold text-foreground">
               Did you find your roommate?
             </h3>
             <p className="text-xs text-slate-400 mt-1">
@@ -264,7 +264,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
                 type="button"
                 disabled={loading}
                 onClick={handleReactivateSearch}
-                className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-white/15 transition-colors"
+                className="w-full rounded-xl border border-white/20 bg-card/10 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-card/15 transition-colors"
               >
                 Re-activate Profile (I am looking again)
               </button>
@@ -273,7 +273,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
                 type="button"
                 disabled={loading}
                 onClick={() => setShowConfirmModal(true)}
-                className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-teal-700 transition-all"
+                className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 text-xs font-bold text-foreground shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-teal-700 transition-all"
               >
                 🎉 I Found My Roommate!
               </button>
@@ -290,7 +290,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 text-xl">
                 🎉
               </div>
-              <h3 className="text-xl font-bold text-white">
+              <h3 className="text-xl font-bold text-foreground">
                 Confirm Roommate Found!
               </h3>
             </div>
@@ -304,7 +304,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
               <button
                 type="button"
                 onClick={() => setShowConfirmModal(false)}
-                className="rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-300 hover:bg-white/10 transition-colors"
+                className="rounded-xl border border-white/15 bg-card/5 px-5 py-2.5 text-sm font-semibold text-slate-300 hover:bg-card/10 transition-colors"
               >
                 Cancel
               </button>
@@ -312,7 +312,7 @@ export default function ProfileStatusManager({ profile, onStatusUpdate }) {
                 type="button"
                 disabled={loading}
                 onClick={handleConfirmFoundRoommate}
-                className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-teal-700 transition-all"
+                className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-2.5 text-sm font-bold text-foreground shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-teal-700 transition-all"
               >
                 {loading ? "Recording..." : "Yes, I Found My Roommate! 🎊"}
               </button>

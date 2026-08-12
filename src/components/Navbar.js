@@ -95,14 +95,10 @@ export default function Navbar() {
   const isHome = pathname === "/";
 
   const getNavClasses = () => {
-    if (isHome) {
-      if (isScrolled) {
-        return "fixed top-0 z-50 w-full transition-all duration-300 bg-[#0a0a0f]/95 border-b border-white/10 backdrop-blur-md shadow-lg";
-      } else {
-        return "fixed top-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-transparent";
-      }
+    if (isHome && !isScrolled) {
+      return "fixed top-0 z-50 w-full transition-all duration-300 bg-transparent border-b border-transparent";
     }
-    return "sticky top-0 z-50 w-full transition-colors border-b border-[#E4E1F2] bg-[#FFFFFF]/95 backdrop-blur-md";
+    return "fixed top-0 z-50 w-full transition-all duration-300 bg-[#0a0a0f]/95 border-b border-white/10 backdrop-blur-md shadow-lg";
   };
 
   return (
@@ -111,10 +107,10 @@ export default function Navbar() {
         {/* Brand Logo with Signature 6-Axis Fingerprint Mark */}
         <Link
           href="/"
-          className={"flex items-center gap-2.5 text-lg font-bold tracking-tight hover:opacity-90 transition-opacity " + (isHome ? "text-white" : "text-[#17151F]")}
+          className="flex items-center gap-2.5 text-lg font-bold tracking-tight hover:opacity-90 transition-opacity text-foreground"
         >
-          <FingerprintLogo className="h-7 w-7" color={isHome ? "#FFFFFF" : "#5B4EE5"} />
-          <span className={"font-semibold " + (isHome ? "text-white" : "text-[#17151F]")}>
+          <FingerprintLogo className="h-7 w-7" color="#5B4EE5" />
+          <span className="font-semibold text-foreground">
             RoomieMatch
           </span>
         </Link>
@@ -122,13 +118,13 @@ export default function Navbar() {
         {/* Navigation Links & User Actions */}
         <nav className="flex items-center gap-6">
           {loading ? (
-            <div className={"h-8 w-28 animate-pulse rounded-full " + (isHome ? "bg-white/10" : "bg-[#F1EFFC]")} />
+            <div className={"h-8 w-28 animate-pulse rounded-full " + (isHome ? "bg-card/10" : "bg-secondary")} />
           ) : user ? (
             <div className="flex items-center gap-5">
               {/* Trust Moss Green Verified Status Pill */}
               <div className="hidden md:flex items-center gap-1.5 rounded-full badge-trust px-3 py-1 text-xs font-semibold">
                 <span className="h-2 w-2 rounded-full bg-[#2F7A56]" />
-                <span className={isHome ? "text-white/90" : ""}>✓ Verified student</span>
+                <span className={isHome ? "text-foreground/90" : ""}>✓ Verified student</span>
               </div>
 
               {/* Nav Links */}
@@ -137,8 +133,8 @@ export default function Navbar() {
                 className={
                   "text-sm font-semibold transition-colors " +
                   (pathname === "/dashboard"
-                    ? "text-[#5B4EE5] underline underline-offset-4"
-                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]")
+                    ? "text-primary underline underline-offset-4"
+                    : "text-muted-foreground hover:text-foreground")
                 }
               >
                 Matches
@@ -149,8 +145,8 @@ export default function Navbar() {
                 className={
                   "text-sm font-semibold transition-colors " +
                   (pathname?.startsWith("/onboarding")
-                    ? "text-[#5B4EE5] underline underline-offset-4"
-                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]")
+                    ? "text-primary underline underline-offset-4"
+                    : isHome ? "text-foreground/80 hover:text-foreground" : "text-muted-foreground hover:text-foreground")
                 }
               >
                 Preferences
@@ -160,25 +156,25 @@ export default function Navbar() {
                 href="/dashboard/profile"
                 className={
                   "text-sm font-semibold transition-colors " +
-                  (pathname?.startsWith("/dashboard/profile")
-                    ? "text-[#5B4EE5] underline underline-offset-4"
-                    : isHome ? "text-white/80 hover:text-white" : "text-[#17151F]/75 hover:text-[#17151F]")
+                  (pathname.startsWith("/onboarding") || pathname.startsWith("/dashboard/profile")
+                    ? "text-primary underline underline-offset-4"
+                    : "text-muted-foreground hover:text-foreground")
                 }
               >
                 My Profile
               </Link>
 
               {/* User Initials Avatar & Sign Out */}
-              <div className={"flex items-center gap-3 pl-3 border-l " + (isHome ? "border-white/20" : "border-[#E4E1F2]")}>
+              <div className={"flex items-center gap-3 pl-3 border-l " + (isHome ? "border-white/20" : "border-border")}>
                 <div
                   title={profile?.full_name || user?.email}
-                  className={"flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold " + (isHome ? "bg-white/10 border-white/20 text-white" : "bg-[#F1EFFC] border-[#D8D5EC] text-[#5B4EE5]")}
+                  className={"flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold " + (isHome ? "bg-card/10 border-white/20 text-foreground" : "bg-secondary border-border text-primary")}
                 >
                   {getInitials(profile?.full_name, user?.email)}
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className={"rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors " + (isHome ? "bg-white/10 border-white/20 text-white hover:bg-white/20" : "border-[#E4E1F2] bg-[#FFFFFF] text-[#17151F]/80 hover:bg-[#F1EFFC] hover:text-[#17151F]")}
+                  className="rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors bg-white/10 border-white/20 text-foreground hover:bg-white/20"
                 >
                   Sign Out
                 </button>
@@ -188,7 +184,7 @@ export default function Navbar() {
             <div className="flex items-center gap-5">
               <Link
                 href="/sign-in"
-                className={"text-sm font-semibold transition-colors " + (isHome ? "text-white/80 hover:text-white" : "text-[#17151F] hover:text-[#5B4EE5]")}
+                className="text-sm font-semibold text-foreground/80 transition-colors hover:text-foreground"
               >
                 Sign in
               </Link>

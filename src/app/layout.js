@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${fraunces.variable} ${inter.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#FFFFFF] text-[#17151F] font-sans selection:bg-[#5B4EE5]/20 selection:text-[#17151F]">
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans selection:bg-primary/20 selection:text-primary-foreground">
         <Navbar />
         <div className="flex flex-1 flex-col">{children}</div>
       </body>
